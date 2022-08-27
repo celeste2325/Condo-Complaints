@@ -1,1 +1,1 @@
-"# celeste2325-gestion-de-reclamos-de-consorcios" 
+"# gestion-de-reclamos-de-consorcios" 
