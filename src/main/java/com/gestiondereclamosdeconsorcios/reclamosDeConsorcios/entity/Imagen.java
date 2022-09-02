@@ -1,5 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -16,11 +18,9 @@ public class Imagen {
     @Basic
     @Column(name = "tipo")
     private String tipo;
-    @Basic
-    @Column(name = "idReclamo")
-    private Integer idReclamo;
     @ManyToOne
     @JoinColumn(name = "idReclamo", referencedColumnName = "idReclamo")
+    @JsonBackReference(value = "reclamo-imagen")
     private Reclamo reclamosByIdReclamo;
 
     public Integer getNumero() {
@@ -47,25 +47,17 @@ public class Imagen {
         this.tipo = tipo;
     }
 
-    public Integer getIdReclamo() {
-        return idReclamo;
-    }
-
-    public void setIdReclamo(Integer idReclamo) {
-        this.idReclamo = idReclamo;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Imagen that = (Imagen) o;
-        return Objects.equals(numero, that.numero) && Objects.equals(path, that.path) && Objects.equals(tipo, that.tipo) && Objects.equals(idReclamo, that.idReclamo);
+        return Objects.equals(numero, that.numero) && Objects.equals(path, that.path) && Objects.equals(tipo, that.tipo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(numero, path, tipo, idReclamo);
+        return Objects.hash(numero, path, tipo);
     }
 
     public Reclamo getReclamosByIdReclamo() {

@@ -1,5 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -19,11 +21,9 @@ public class Unidad {
     @Basic
     @Column(name = "habitado")
     private String habitado;
-    @Basic
-    @Column(name = "codigoEdificio")
-    private Integer codigoEdificio;
     @ManyToOne
     @JoinColumn(name = "codigoEdificio", referencedColumnName = "codigo")
+    @JsonBackReference(value = "edificio-unidad")
     private Edificio edificiosByCodigoEdificio;
 
     public Integer getIdentificador() {
@@ -58,25 +58,17 @@ public class Unidad {
         this.habitado = habitado;
     }
 
-    public Integer getCodigoEdificio() {
-        return codigoEdificio;
-    }
-
-    public void setCodigoEdificio(Integer codigoEdificio) {
-        this.codigoEdificio = codigoEdificio;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unidad that = (Unidad) o;
-        return Objects.equals(identificador, that.identificador) && Objects.equals(piso, that.piso) && Objects.equals(numero, that.numero) && Objects.equals(habitado, that.habitado) && Objects.equals(codigoEdificio, that.codigoEdificio);
+        return Objects.equals(identificador, that.identificador) && Objects.equals(piso, that.piso) && Objects.equals(numero, that.numero) && Objects.equals(habitado, that.habitado);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(identificador, piso, numero, habitado, codigoEdificio);
+        return Objects.hash(identificador, piso, numero, habitado);
     }
 
     public Edificio getEdificiosByCodigoEdificio() {

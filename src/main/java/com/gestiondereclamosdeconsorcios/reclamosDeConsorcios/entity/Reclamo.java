@@ -1,5 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -9,14 +12,8 @@ import java.util.Objects;
 public class Reclamo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "idReclamo")
+    @Column(name = "idReclamo" )
     private Integer idReclamo;
-    @Basic
-    @Column(name = "documento")
-    private String documento;
-    @Basic
-    @Column(name = "codigo")
-    private Integer codigo;
     @Basic
     @Column(name = "ubicacion")
     private String ubicacion;
@@ -27,12 +24,15 @@ public class Reclamo {
     @Column(name = "identificador")
     private Integer identificador;
     @OneToMany(mappedBy = "reclamosByIdReclamo")
+    @JsonManagedReference(value = "reclamo-imagen")
     private Collection<Imagen> imagenesByIdReclamo;
     @ManyToOne
     @JoinColumn(name = "documento", referencedColumnName = "documento", nullable = false)
+    @JsonBackReference(value = "reclamo-persona")
     private Persona personasByDocumento;
     @ManyToOne
     @JoinColumn(name = "codigo", referencedColumnName = "codigo", nullable = false)
+    @JsonBackReference(value = "edificio-reclamo")
     private Edificio edificiosByCodigo;
 
     public Integer getIdReclamo() {
@@ -41,22 +41,6 @@ public class Reclamo {
 
     public void setIdReclamo(Integer idReclamo) {
         this.idReclamo = idReclamo;
-    }
-
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
-    public Integer getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
     }
 
     public String getUbicacion() {
@@ -88,12 +72,12 @@ public class Reclamo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reclamo that = (Reclamo) o;
-        return Objects.equals(idReclamo, that.idReclamo) && Objects.equals(documento, that.documento) && Objects.equals(codigo, that.codigo) && Objects.equals(ubicacion, that.ubicacion) && Objects.equals(descripcion, that.descripcion) && Objects.equals(identificador, that.identificador);
+        return Objects.equals(idReclamo, that.idReclamo)&& Objects.equals(ubicacion, that.ubicacion) && Objects.equals(descripcion, that.descripcion) && Objects.equals(identificador, that.identificador);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idReclamo, documento, codigo, ubicacion, descripcion, identificador);
+        return Objects.hash(idReclamo,ubicacion, descripcion, identificador);
     }
 
     public Collection<Imagen> getImagenesByIdReclamo() {
