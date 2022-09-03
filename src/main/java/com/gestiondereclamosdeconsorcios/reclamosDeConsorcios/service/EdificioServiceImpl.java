@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+
 @Service
 public class EdificioServiceImpl implements EdificioService {
     @Autowired
@@ -25,6 +27,22 @@ public class EdificioServiceImpl implements EdificioService {
     @Override
     public List<Edificio> getAll() {
        return edificioRepository.findAll();
+    }
+
+    @Override
+    public void remove(Integer id) {
+        edificioRepository.deleteById(id);
+    }
+
+    @Override
+    public Edificio update(Edificio newEdificio, Integer id) {
+       return edificioRepository.findById(id).map(edificio -> {
+            edificio.setDireccion(newEdificio.getDireccion());
+            edificio.setNombre(newEdificio.getNombre());
+            edificio.setReclamosByCodigo(newEdificio.getReclamosByCodigo());
+            edificio.setUnidadesByCodigo(newEdificio.getUnidadesByCodigo());
+            return edificioRepository.save(edificio);
+        }).get();
     }
 
 }

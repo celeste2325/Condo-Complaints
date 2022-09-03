@@ -34,5 +34,15 @@ public class EdificioRestController {
         return edificios;
     }
 
+    @DeleteMapping("/{id}")
+    ResponseEntity deleteUser(@PathVariable Integer id){
+        edificioServiceImpl.remove(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+    @PutMapping("/{id}")
+    ResponseEntity<Edificio> replaceEdificio(@RequestBody Edificio newEdificio, @PathVariable Integer id){
+        return new ResponseEntity<>(edificioServiceImpl.update(newEdificio, id), HttpStatus.OK);
+    }
+
 
 }

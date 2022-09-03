@@ -9,6 +9,10 @@ public interface EdificioService {
     public void saveEdificio(Edificio edificio);
 
     public List<Edificio>  getAll();
+
+    public void remove(Integer id);
+
+    public Edificio update(Edificio newEdificio, Integer id);
 }
 
 
