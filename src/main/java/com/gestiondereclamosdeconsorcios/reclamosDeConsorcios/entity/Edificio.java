@@ -9,6 +9,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "edificios", schema = "dbo", catalog = "gestion_reclamo_consorcio")
 public class Edificio {
+
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "codigo")

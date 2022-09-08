@@ -75,6 +75,7 @@ public class Unidad {
         return edificiosByCodigoEdificio;
     }
 
+
     public void setEdificiosByCodigoEdificio(Edificio edificiosByCodigoEdificio) {
         this.edificiosByCodigoEdificio = edificiosByCodigoEdificio;
     }

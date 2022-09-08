@@ -29,15 +29,14 @@ public class EdificioRestController {
 
     @GetMapping("/")
     public List<Edificio> getEdificios(){
-
         List<Edificio> edificios =  this.edificioServiceImpl.getAll();
         return edificios;
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity deleteUser(@PathVariable Integer id){
+    ResponseEntity deleteEdificio(@PathVariable Integer id){
         edificioServiceImpl.remove(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.OK);
     }
     @PutMapping("/{id}")
     ResponseEntity<Edificio> replaceEdificio(@RequestBody Edificio newEdificio, @PathVariable Integer id){
