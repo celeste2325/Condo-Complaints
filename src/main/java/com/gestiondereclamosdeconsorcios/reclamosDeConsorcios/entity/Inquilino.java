@@ -8,14 +8,22 @@ import java.util.Objects;
 public class Inquilino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "INTEGER")
     private Integer id;
     @Basic
     @Column(name = "identificador")
     private Integer identificador;
-    @Basic
-    @Column(name = "documento")
-    private String documento;
+    @OneToOne
+    @JoinColumn(name = "documento", referencedColumnName = "documento")
+    private Persona persona;
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
 
     public Integer getId() {
         return id;
@@ -33,24 +41,15 @@ public class Inquilino {
         this.identificador = identificador;
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Inquilino that = (Inquilino) o;
-        return Objects.equals(id, that.id) && Objects.equals(identificador, that.identificador) && Objects.equals(documento, that.documento);
+        if (!(o instanceof Inquilino inquilino)) return false;
+        return Objects.equals(getId(), inquilino.getId()) && Objects.equals(getIdentificador(), inquilino.getIdentificador()) && Objects.equals(getPersona(), inquilino.getPersona());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, identificador, documento);
+        return Objects.hash(getId(), getIdentificador(), getPersona());
     }
 }

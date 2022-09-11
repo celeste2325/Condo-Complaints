@@ -7,7 +7,8 @@ import java.util.List;
 public interface EdificioService {
     public List<Edificio> getEdificioByName(String name);
 
-    public List<Edificio>  getAll();
+    public List<Edificio> getAll();
+
     public void saveEdificio(Edificio edificio);
 
     public void remove(Integer id);

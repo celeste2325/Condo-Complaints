@@ -13,9 +13,18 @@ public class Duenio {
     @Basic
     @Column(name = "identificador")
     private Integer identificador;
-    @Basic
-    @Column(name = "documento")
-    private String documento;
+
+    @OneToOne()
+    @JoinColumn(name = "documento", referencedColumnName = "documento")
+    private Persona persona;
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
 
     public Integer getId() {
         return id;
@@ -33,24 +42,15 @@ public class Duenio {
         this.identificador = identificador;
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Duenio that = (Duenio) o;
-        return Objects.equals(id, that.id) && Objects.equals(identificador, that.identificador) && Objects.equals(documento, that.documento);
+        if (!(o instanceof Duenio duenio)) return false;
+        return Objects.equals(getId(), duenio.getId()) && Objects.equals(getIdentificador(), duenio.getIdentificador()) && Objects.equals(persona, duenio.persona);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, identificador, documento);
+        return Objects.hash(getId(), getIdentificador(), persona);
     }
 }

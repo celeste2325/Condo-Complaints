@@ -36,14 +36,13 @@ public class Persona {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Persona that = (Persona) o;
-        return Objects.equals(documento, that.documento) && Objects.equals(nombre, that.nombre);
+        if (!(o instanceof Persona persona)) return false;
+        return Objects.equals(getDocumento(), persona.getDocumento()) && Objects.equals(getNombre(), persona.getNombre()) && Objects.equals(getReclamosByDocumento(), persona.getReclamosByDocumento());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(documento, nombre);
+        return Objects.hash(getDocumento(), getNombre(), getReclamosByDocumento());
     }
 
     public Collection<Reclamo> getReclamosByDocumento() {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UnidadServiceImpl implements UnidadService{
+public class UnidadServiceImpl implements UnidadService {
     @Autowired
     private UnidadRepository unidadRepository;
 

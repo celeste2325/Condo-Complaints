@@ -10,6 +10,7 @@ public interface UnidadService {
     public void remove(Integer id);
 
     public Unidad update(Unidad newUnidad, Integer id);
+
     public List<Unidad> getAll();
 
-    }
+}

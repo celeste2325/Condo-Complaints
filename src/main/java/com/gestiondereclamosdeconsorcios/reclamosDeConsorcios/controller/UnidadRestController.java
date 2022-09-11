@@ -20,28 +20,28 @@ public class UnidadRestController {
     }
 
     @GetMapping("/")
-    public List<Unidad> getUnidades(){
+    public List<Unidad> getUnidades() {
         List<Unidad> unidades = unidadServiceImpl.getAll();
         return unidades;
     }
+
     @PostMapping("/")
-    public ResponseEntity CrearUnidad(@RequestBody Unidad newUnidad){
+    public ResponseEntity CrearUnidad(@RequestBody Unidad newUnidad) {
         try {
             unidadServiceImpl.saveUnidad(newUnidad);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Unidad> replaceUnidad(@RequestBody Unidad newUnidad, @PathVariable Integer id){
-        return new ResponseEntity<>(unidadServiceImpl.update(newUnidad,id), HttpStatus.OK);
+    public ResponseEntity<Unidad> replaceUnidad(@RequestBody Unidad newUnidad, @PathVariable Integer id) {
+        return new ResponseEntity<>(unidadServiceImpl.update(newUnidad, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Unidad> deleteUnidad(@PathVariable Integer id){
+    public ResponseEntity<Unidad> deleteUnidad(@PathVariable Integer id) {
         unidadServiceImpl.remove(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

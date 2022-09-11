@@ -12,7 +12,7 @@ import java.util.Objects;
 public class Reclamo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "idReclamo" )
+    @Column(name = "idReclamo")
     private Integer idReclamo;
     @Basic
     @Column(name = "ubicacion")
@@ -72,12 +72,12 @@ public class Reclamo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reclamo that = (Reclamo) o;
-        return Objects.equals(idReclamo, that.idReclamo)&& Objects.equals(ubicacion, that.ubicacion) && Objects.equals(descripcion, that.descripcion) && Objects.equals(identificador, that.identificador);
+        return Objects.equals(idReclamo, that.idReclamo) && Objects.equals(ubicacion, that.ubicacion) && Objects.equals(descripcion, that.descripcion) && Objects.equals(identificador, that.identificador);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idReclamo,ubicacion, descripcion, identificador);
+        return Objects.hash(idReclamo, ubicacion, descripcion, identificador);
     }
 
     public Collection<Imagen> getImagenesByIdReclamo() {
