@@ -7,7 +7,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "personas", schema = "dbo", catalog = "gestion_reclamo_consorcio")
 public class Persona {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "documento")
     private String documento;

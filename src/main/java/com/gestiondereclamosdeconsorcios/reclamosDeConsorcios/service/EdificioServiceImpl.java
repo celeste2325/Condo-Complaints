@@ -41,8 +41,6 @@ public class EdificioServiceImpl implements EdificioService {
         return edificioRepository.findById(id).map(edificio -> {
             edificio.setDireccion(newEdificio.getDireccion());
             edificio.setNombre(newEdificio.getNombre());
-            edificio.setReclamosByCodigo(newEdificio.getReclamosByCodigo());
-            edificio.setUnidadesByCodigo(newEdificio.getUnidadesByCodigo());
             return edificioRepository.save(edificio);
         }).get();
     }

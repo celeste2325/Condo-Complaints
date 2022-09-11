@@ -32,7 +32,6 @@ public class UnidadServiceImpl implements UnidadService {
             unidad.setPiso(newUnidad.getPiso());
             unidad.setNumero(newUnidad.getNumero());
             unidad.setHabitado(newUnidad.getHabitado());
-            unidad.setEdificiosByCodigoEdificio(newUnidad.getEdificiosByCodigoEdificio());
             return unidadRepository.save(unidad);
         }).get();
     }

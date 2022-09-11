@@ -7,11 +7,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface DuenioService {
-    public List<Duenio> getAll();
-
+    List<Duenio> getAll();
     void saveDuenio(Duenio newDuenio);
-
     Duenio update(Duenio newDuenio, Integer id);
-
     void remove(Integer id);
 }

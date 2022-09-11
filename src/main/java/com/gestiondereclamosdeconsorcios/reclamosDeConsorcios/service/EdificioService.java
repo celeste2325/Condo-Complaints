@@ -5,15 +5,15 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import java.util.List;
 
 public interface EdificioService {
-    public List<Edificio> getEdificioByName(String name);
+    List<Edificio> getEdificioByName(String name);
 
-    public List<Edificio> getAll();
+    List<Edificio> getAll();
 
-    public void saveEdificio(Edificio edificio);
+    void saveEdificio(Edificio edificio);
 
-    public void remove(Integer id);
+    void remove(Integer id);
 
-    public Edificio update(Edificio newEdificio, Integer id);
+    Edificio update(Edificio newEdificio, Integer id);
 }
 
 
