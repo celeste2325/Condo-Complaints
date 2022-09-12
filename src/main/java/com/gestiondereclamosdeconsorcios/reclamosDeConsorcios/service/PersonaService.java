@@ -1,7 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonaRepository;
 
 import java.util.List;
 

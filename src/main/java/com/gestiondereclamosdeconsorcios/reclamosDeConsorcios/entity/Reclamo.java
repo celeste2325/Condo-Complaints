@@ -14,6 +14,10 @@ public class Reclamo {
     @Id
     @Column(name = "idReclamo")
     private Integer idReclamo;
+
+    @Basic
+    @Column(name = "estado")
+    private String estado = "nuevo";
     @Basic
     @Column(name = "ubicacion")
     private String ubicacion;
@@ -23,7 +27,7 @@ public class Reclamo {
     @Basic
     @Column(name = "identificador")
     private Integer identificador;
-    @OneToMany(mappedBy = "reclamosByIdReclamo")
+    @OneToMany(mappedBy = "reclamosByIdReclamo", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "reclamo-imagen")
     private Collection<Imagen> imagenesByIdReclamo;
     @ManyToOne
@@ -34,6 +38,14 @@ public class Reclamo {
     @JoinColumn(name = "codigo", referencedColumnName = "codigo", nullable = false)
     @JsonBackReference(value = "edificio-reclamo")
     private Edificio edificiosByCodigo;
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     public Integer getIdReclamo() {
         return idReclamo;

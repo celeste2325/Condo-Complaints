@@ -1,6 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,9 +13,10 @@ public class Imagen {
     @Id
     @Column(name = "numero")
     private Integer numero;
-    @Basic
-    @Column(name = "path")
-    private String path;
+
+    @Lob
+    @Column(name = "dataFoto")
+    private byte[]  dataFoto;
     @Basic
     @Column(name = "tipo")
     private String tipo;
@@ -22,6 +24,17 @@ public class Imagen {
     @JoinColumn(name = "idReclamo", referencedColumnName = "idReclamo")
     @JsonBackReference(value = "reclamo-imagen")
     private Reclamo reclamosByIdReclamo;
+    @JsonInclude
+    @Transient
+    private String castBlob;
+
+    public String getCastBlob() {
+        return castBlob;
+    }
+
+    public void setCastBlob(String castBlob) {
+        this.castBlob = castBlob;
+    }
 
     public Integer getNumero() {
         return numero;
@@ -31,12 +44,12 @@ public class Imagen {
         this.numero = numero;
     }
 
-    public String getPath() {
-        return path;
+    public byte[]  getDataFoto() {
+        return dataFoto;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setDataFoto(byte[]  path) {
+        this.dataFoto = path;
     }
 
     public String getTipo() {
@@ -52,12 +65,12 @@ public class Imagen {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Imagen that = (Imagen) o;
-        return Objects.equals(numero, that.numero) && Objects.equals(path, that.path) && Objects.equals(tipo, that.tipo);
+        return Objects.equals(numero, that.numero) && Objects.equals(dataFoto, that.dataFoto) && Objects.equals(tipo, that.tipo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(numero, path, tipo);
+        return Objects.hash(numero, dataFoto, tipo);
     }
 
     public Reclamo getReclamosByIdReclamo() {
