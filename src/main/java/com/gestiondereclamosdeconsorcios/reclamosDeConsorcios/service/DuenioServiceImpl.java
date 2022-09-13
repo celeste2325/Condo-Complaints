@@ -26,7 +26,6 @@ public class DuenioServiceImpl implements DuenioService {
     public Duenio update(Duenio newDuenio, Integer id) {
         return duenioRepository.findById(id).map(duenio -> {
             duenio.setIdentificador(newDuenio.getIdentificador());
-            duenio.setPersona(newDuenio.getPersona());
             return duenioRepository.save(duenio);
         }).get();
     }

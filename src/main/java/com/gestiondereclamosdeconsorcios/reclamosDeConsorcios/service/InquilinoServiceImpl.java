@@ -31,7 +31,6 @@ public class InquilinoServiceImpl implements InquilinoService{
     public Inquilino update(Inquilino newInquilino, Integer id) {
         return this.inquilinoRepository.findById(id).map(inquilino -> {
             inquilino.setIdentificador(newInquilino.getIdentificador());
-            inquilino.setPersona(newInquilino.getPersona());
             return this.inquilinoRepository.save(inquilino);
         }).get();
     }

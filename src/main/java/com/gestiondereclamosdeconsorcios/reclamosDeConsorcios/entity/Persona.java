@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "personas", schema = "dbo", catalog = "gestion_reclamo_consorcio")
 public class Persona {
 

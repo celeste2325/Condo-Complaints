@@ -1,37 +1,17 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "inquilinos", schema = "dbo", catalog = "gestion_reclamo_consorcio")
-public class Inquilino {
+@PrimaryKeyJoinColumn(name = "documento")
+public class Inquilino extends Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id", columnDefinition = "INTEGER")
-    private Integer id;
     @Basic
     @Column(name = "identificador")
     private Integer identificador;
-    @OneToOne
-    @JoinColumn(name = "documento", referencedColumnName = "documento")
-    private Persona persona;
-
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona persona) {
-        this.persona = persona;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getIdentificador() {
         return identificador;
@@ -45,11 +25,11 @@ public class Inquilino {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Inquilino inquilino)) return false;
-        return Objects.equals(getId(), inquilino.getId()) && Objects.equals(getIdentificador(), inquilino.getIdentificador()) && Objects.equals(getPersona(), inquilino.getPersona());
+        return Objects.equals(getIdentificador(), inquilino.getIdentificador());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getIdentificador(), getPersona());
+        return Objects.hash(getIdentificador());
     }
 }

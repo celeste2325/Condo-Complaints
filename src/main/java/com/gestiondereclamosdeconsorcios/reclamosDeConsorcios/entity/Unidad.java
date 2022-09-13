@@ -27,17 +27,6 @@ public class Unidad {
     @JsonBackReference(value = "edificio-unidad")
     private Edificio edificiosByCodigoEdificio;
 
-    @OneToMany
-    private List<Duenio> duenios;
-
-    public List<Duenio> getDuenios() {
-        return duenios;
-    }
-
-    public void setDuenios(List<Duenio> duenios) {
-        this.duenios = duenios;
-    }
-
     public Integer getIdentificador() {
         return identificador;
     }
