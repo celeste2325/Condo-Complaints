@@ -3,6 +3,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +26,17 @@ public class Unidad {
     @JoinColumn(name = "codigoEdificio", referencedColumnName = "codigo")
     @JsonBackReference(value = "edificio-unidad")
     private Edificio edificiosByCodigoEdificio;
+
+    @OneToMany
+    private List<Duenio> duenios;
+
+    public List<Duenio> getDuenios() {
+        return duenios;
+    }
+
+    public void setDuenios(List<Duenio> duenios) {
+        this.duenios = duenios;
+    }
 
     public Integer getIdentificador() {
         return identificador;

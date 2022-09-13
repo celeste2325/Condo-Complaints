@@ -16,7 +16,6 @@ public class ReclamoRestController {
 
     @Autowired
     ReclamoService reclamoService;
-
     @PostMapping("/")
     public ResponseEntity createNewReclamo(@RequestBody Reclamo newReclamo) {
         try {

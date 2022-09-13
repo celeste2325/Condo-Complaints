@@ -1,7 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.DuenioServiceImpl;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.DuenioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/duenio")
 public class DuenioRestController {
-    DuenioServiceImpl duenioService;
-
-    public DuenioRestController(DuenioServiceImpl duenioService) {
-        this.duenioService = duenioService;
-    }
+    @Autowired
+    DuenioService duenioService;
 
     @GetMapping("/")
     public List<Duenio> getDuenios() {
