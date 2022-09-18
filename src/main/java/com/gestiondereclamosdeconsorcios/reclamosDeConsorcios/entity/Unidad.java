@@ -3,7 +3,6 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
