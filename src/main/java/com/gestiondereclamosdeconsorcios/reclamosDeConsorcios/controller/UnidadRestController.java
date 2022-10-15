@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidades;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnidadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +15,12 @@ public class UnidadRestController {
     @Autowired
     UnidadService unidadService;
     @GetMapping("/")
-    public List<Unidad> getUnidades() {
-        List<Unidad> unidades = unidadService.getAll();
+    public List<Unidades> getUnidades() {
+        List<Unidades> unidades = unidadService.getAll();
         return unidades;
     }
     @PostMapping("/")
-    public ResponseEntity CrearUnidad(@RequestBody Unidad newUnidad) {
+    public ResponseEntity CrearUnidad(@RequestBody Unidades newUnidad) {
         try {
             unidadService.saveUnidad(newUnidad);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -30,12 +30,12 @@ public class UnidadRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Unidad> replaceUnidad(@RequestBody Unidad newUnidad, @PathVariable Integer id) {
+    public ResponseEntity<Unidades> replaceUnidad(@RequestBody Unidades newUnidad, @PathVariable Integer id) {
         return new ResponseEntity<>(unidadService.update(newUnidad, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Unidad> deleteUnidad(@PathVariable Integer id) {
+    public ResponseEntity<Unidades> deleteUnidad(@PathVariable Integer id) {
         unidadService.remove(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

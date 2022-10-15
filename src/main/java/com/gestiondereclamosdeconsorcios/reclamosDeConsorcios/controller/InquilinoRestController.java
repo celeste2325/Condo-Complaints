@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilinos;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.InquilinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,19 +16,19 @@ public class InquilinoRestController {
     InquilinoService inquilinoService;
 
     @GetMapping("/")
-    public List<Inquilino> getAll(){
+    public List<Inquilinos> getAll(){
         return this.inquilinoService.getAll();
     }
 
     @GetMapping("/{documento}")
-    public List<Inquilino> getAllByDocument(@PathVariable String documento){
+    public List<Inquilinos> getAllByDocument(@PathVariable String documento){
         return this.inquilinoService.getAllByDocument(documento);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> saveInquilino(@RequestBody Inquilino newInquilino){
+    public ResponseEntity<Void> saveInquilino(@RequestBody Inquilinos newInquilinos){
         try {
-            this.inquilinoService.save(newInquilino);
+            this.inquilinoService.save(newInquilinos);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -41,8 +41,8 @@ public class InquilinoRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Inquilino> updateInquilino(@RequestBody Inquilino newInquilino, @PathVariable Integer id){
-        return new ResponseEntity<>(this.inquilinoService.update(newInquilino,id), HttpStatus.OK);
+    public ResponseEntity<Inquilinos> updateInquilino(@RequestBody Inquilinos newInquilinos, @PathVariable Integer id){
+        return new ResponseEntity<>(this.inquilinoService.update(newInquilinos,id), HttpStatus.OK);
     }
 
 }

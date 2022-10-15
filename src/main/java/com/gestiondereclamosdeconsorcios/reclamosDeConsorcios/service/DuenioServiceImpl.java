@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenios;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.DuenioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,19 +13,19 @@ public class DuenioServiceImpl implements DuenioService {
     DuenioRepository duenioRepository;
 
     @Override
-    public List<Duenio> getAll() {
+    public List<Duenios> getAll() {
         return duenioRepository.findAll();
     }
 
     @Override
-    public void saveDuenio(Duenio newDuenio) {
-        duenioRepository.save(newDuenio);
+    public void saveDuenio(Duenios newDuenios) {
+        duenioRepository.save(newDuenios);
     }
 
     @Override
-    public Duenio update(Duenio newDuenio, Integer id) {
+    public Duenios update(Duenios newDuenios, Integer id) {
         return duenioRepository.findById(id).map(duenio -> {
-            duenio.setIdentificador(newDuenio.getIdentificador());
+            duenio.setIdentificador(newDuenios.getIdentificador());
             return duenioRepository.save(duenio);
         }).get();
     }

@@ -1,19 +1,16 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Personas;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.NamedNativeQuery;
 import javax.transaction.Transactional;
-import java.util.List;
 
-public interface PersonaRepository extends JpaRepository<Persona, String> {
+public interface PersonaRepository extends JpaRepository<Personas, String> {
 
-    @Query("SELECT p FROM Persona p WHERE p.documento = ?1")
+    @Query("SELECT p FROM Personas p WHERE p.documento = ?1")
     @Modifying(clearAutomatically = true)
     @Transactional
-    public Persona findPersonaByDocument(String documento);
+    public Personas findPersonaByDocument(String documento);
 }

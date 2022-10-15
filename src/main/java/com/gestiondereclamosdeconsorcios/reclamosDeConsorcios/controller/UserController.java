@@ -2,7 +2,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UsuarioNoEsDuenioNiIquilinoDelEdificioException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UsuarioOContraseniaIncorrecta;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Personas;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ public class UserController {
     UserServiceImpl userDetailsService;
 
     @PostMapping("/")
-    public ResponseEntity guardarUsuario(@RequestBody Persona newPersonaLogin) {
+    public ResponseEntity guardarUsuario(@RequestBody Personas newPersonasLogin) {
     try {
-        return new ResponseEntity<>(this.userDetailsService.saveUser(newPersonaLogin), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(this.userDetailsService.saveUser(newPersonasLogin), HttpStatus.BAD_REQUEST);
     } catch (UsuarioNoEsDuenioNiIquilinoDelEdificioException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }

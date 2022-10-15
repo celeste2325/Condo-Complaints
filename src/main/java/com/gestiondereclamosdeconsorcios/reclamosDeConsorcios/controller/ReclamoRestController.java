@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamos;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ReclamoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ public class ReclamoRestController {
     @Autowired
     ReclamoService reclamoService;
     @PostMapping("/")
-    public ResponseEntity createNewReclamo(@RequestBody Reclamo newReclamo) {
+    public ResponseEntity createNewReclamo(@RequestBody Reclamos newReclamo) {
         try {
             this.reclamoService.createReclamo(newReclamo);
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -27,23 +27,23 @@ public class ReclamoRestController {
     }
 
     @GetMapping("/")
-    public List<Reclamo> getReclamos(){
+    public List<Reclamos> getReclamos(){
         return this.reclamoService.getAll();
     }
 
     @GetMapping("estado/{estado}")
-    public List<Reclamo> getReclamosPorEstado(@PathVariable String estado){
+    public List<Reclamos> getReclamosPorEstado(@PathVariable String estado){
         return this.reclamoService.getAllByEstado(estado);
     }
 
     @GetMapping("/{id}")
-    public Optional<Reclamo> getReclamosPorEstado(@PathVariable Integer id){
+    public Optional<Reclamos> getReclamosPorEstado(@PathVariable Integer id){
         return this.reclamoService.getById(id);
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity updateEstadoReclamo(@RequestBody Reclamo reclamo, @PathVariable Integer id){
+    public ResponseEntity updateEstadoReclamo(@RequestBody Reclamos reclamo, @PathVariable Integer id){
         return new ResponseEntity(this.reclamoService.updateEstado(reclamo, id), HttpStatus.OK);
     }
 }

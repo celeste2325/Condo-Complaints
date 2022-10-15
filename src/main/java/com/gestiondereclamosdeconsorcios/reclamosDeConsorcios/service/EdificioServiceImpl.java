@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificios;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,18 +16,18 @@ public class EdificioServiceImpl implements EdificioService {
 
     @Override
 
-    public List<Edificio> getEdificioByName(String name) {
+    public List<Edificios> getEdificioByName(String name) {
 
         return edificioRepository.findByNombre(name);
     }
 
     @Transactional
-    public void saveEdificio(Edificio edificio) {
-        edificioRepository.save(edificio); /*es conveniente usar try catch?*/
+    public void saveEdificio(Edificios edificios) {
+        edificioRepository.save(edificios); /*es conveniente usar try catch?*/
     }
 
     @Override
-    public List<Edificio> getAll() {
+    public List<Edificios> getAll() {
         return edificioRepository.findAll();
     }
 
@@ -37,10 +37,10 @@ public class EdificioServiceImpl implements EdificioService {
     }
 
     @Override
-    public Edificio update(Edificio newEdificio, Integer id) {
+    public Edificios update(Edificios newEdificios, Integer id) {
         return edificioRepository.findById(id).map(edificio -> {
-            edificio.setDireccion(newEdificio.getDireccion());
-            edificio.setNombre(newEdificio.getNombre());
+            edificio.setDireccion(newEdificios.getDireccion());
+            edificio.setNombre(newEdificios.getNombre());
             return edificioRepository.save(edificio);
         }).get();
     }

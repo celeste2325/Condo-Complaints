@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilinos;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.InquilinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,19 +13,19 @@ public class InquilinoServiceImpl implements InquilinoService{
     InquilinoRepository inquilinoRepository;
 
     @Override
-    public List<Inquilino> getAll() {
+    public List<Inquilinos> getAll() {
        return this.inquilinoRepository.findAll();
     }
 
     @Override
-    public List<Inquilino> getAllByDocument(String Documento) {
+    public List<Inquilinos> getAllByDocument(String Documento) {
         var value = this.inquilinoRepository.findDistinctByDocumento(Documento);
         return value;
     }
 
     @Override
-    public void save(Inquilino newInquilino) {
-        this.inquilinoRepository.save(newInquilino);
+    public void save(Inquilinos newInquilinos) {
+        this.inquilinoRepository.save(newInquilinos);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class InquilinoServiceImpl implements InquilinoService{
     }
 
     @Override
-    public Inquilino update(Inquilino newInquilino, Integer id) {
+    public Inquilinos update(Inquilinos newInquilinos, Integer id) {
         return this.inquilinoRepository.findById(id).map(inquilino -> {
-            inquilino.setIdentificador(newInquilino.getIdentificador());
+            inquilino.setIdentificador(newInquilinos.getIdentificador());
             return this.inquilinoRepository.save(inquilino);
         }).get();
     }

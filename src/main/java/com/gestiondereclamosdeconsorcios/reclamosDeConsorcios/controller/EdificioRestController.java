@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificios;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.EdificioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,9 @@ public class EdificioRestController {
     private EdificioService edificioService;
 
     @PostMapping("/")
-    public ResponseEntity crearEdificio(@RequestBody Edificio newEdificio) {
+    public ResponseEntity crearEdificio(@RequestBody Edificios newEdificios) {
         try {
-            this.edificioService.saveEdificio(newEdificio);
+            this.edificioService.saveEdificio(newEdificios);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -26,8 +26,8 @@ public class EdificioRestController {
     }
 
     @GetMapping("/")
-    public List<Edificio> getEdificios() {
-        List<Edificio> edificios = this.edificioService.getAll();
+    public List<Edificios> getEdificios() {
+        List<Edificios> edificios = this.edificioService.getAll();
         return edificios;
     }
 
@@ -38,8 +38,8 @@ public class EdificioRestController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Edificio> replaceEdificio(@RequestBody Edificio newEdificio, @PathVariable Integer id) {
-        return new ResponseEntity<>(edificioService.update(newEdificio, id), HttpStatus.OK);
+    ResponseEntity<Edificios> replaceEdificio(@RequestBody Edificios newEdificios, @PathVariable Integer id) {
+        return new ResponseEntity<>(edificioService.update(newEdificios, id), HttpStatus.OK);
     }
 
 

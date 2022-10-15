@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenios;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.DuenioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +18,15 @@ public class DuenioRestController {
     DuenioService duenioService;
 
     @GetMapping("/")
-    public List<Duenio> getDuenios() {
+    public List<Duenios> getDuenios() {
         return duenioService.getAll();
     }
 
     @PostMapping("/")
-    public ResponseEntity crearDueño(@RequestBody Duenio newDuenio){
+    public ResponseEntity crearDueño(@RequestBody Duenios newDuenios){
         System.out.println(new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2A, new SecureRandom("cele".getBytes())));
         try {
-            duenioService.saveDuenio(newDuenio);
+            duenioService.saveDuenio(newDuenios);
             return new ResponseEntity(HttpStatus.CREATED);
         }
         catch (Exception e){
@@ -35,8 +35,8 @@ public class DuenioRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateDuenio(@RequestBody Duenio newDuenio, @PathVariable Integer id){
-        return new ResponseEntity<>(duenioService.update(newDuenio, id), HttpStatus.OK);
+    public ResponseEntity updateDuenio(@RequestBody Duenios newDuenios, @PathVariable Integer id){
+        return new ResponseEntity<>(duenioService.update(newDuenios, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

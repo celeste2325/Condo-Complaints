@@ -1,25 +1,19 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UsuarioNoEsDuenioNiIquilinoDelEdificioException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Personas;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.log.LogMessage;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -32,7 +26,7 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
 
     @Override
     public void createUser(UserDetails personaLogin) {
-        Optional<Persona> personaEncontrada = this.personaRepository.findById(personaLogin.getUsername());
+        Optional<Personas> personaEncontrada = this.personaRepository.findById(personaLogin.getUsername());
         if (personaEncontrada.isPresent()) {
             personaEncontrada.get().setContrasenia(this.bCryptPasswordEncoder.encode(personaLogin.getPassword()));
             this.personaRepository.save(personaEncontrada.get());
@@ -46,7 +40,7 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
     }
 
     public void createAdmin(UserDetails personaLogin) {
-       var AminPersona = (Persona)personaLogin;
+       var AminPersona = (Personas)personaLogin;
         this.personaRepository.save(AminPersona);
     }
 
@@ -69,7 +63,7 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
                     "Can't change password as no Authentication object found in context " + "for current user.");
         }
         String username = currentUser.getName();
-        Optional<Persona> persona = this.personaRepository.findById(username);
+        Optional<Personas> persona = this.personaRepository.findById(username);
         if (persona.isPresent()) {
             persona.get().setContrasenia(this.bCryptPasswordEncoder.encode(persona.get().getContrasenia()));
         } else try {

@@ -1,20 +1,20 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamos;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ReclamoService {
     
-    void createReclamo(Reclamo newReclamo);
+    void createReclamo(Reclamos newReclamo);
 
-    List<Reclamo> getAll();
+    List<Reclamos> getAll();
 
-    Reclamo updateEstado(Reclamo reclamo, Integer id);
+    Reclamos updateEstado(Reclamos reclamo, Integer id);
 
-    List<Reclamo> getAllByEstado(String estado);
+    List<Reclamos> getAllByEstado(String estado);
 
-    Optional<Reclamo> getById(Integer id);
+    Optional<Reclamos> getById(Integer id);
 
 }

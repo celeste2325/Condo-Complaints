@@ -1,16 +1,16 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidades;
 
 import java.util.List;
 
 public interface UnidadService {
-    void saveUnidad(Unidad unidad);
+    void saveUnidad(Unidades unidad);
 
     void remove(Integer id);
 
-    Unidad update(Unidad newUnidad, Integer id);
+    Unidades update(Unidades newUnidad, Integer id);
 
-    List<Unidad> getAll();
+    List<Unidades> getAll();
 
 }

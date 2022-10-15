@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidades;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class UnidadServiceImpl implements UnidadService {
     }
 
     @Override
-    public void saveUnidad(Unidad unidad) {
+    public void saveUnidad(Unidades unidad) {
         unidadRepository.save(unidad);
     }
 
@@ -27,7 +27,7 @@ public class UnidadServiceImpl implements UnidadService {
     }
 
     @Override
-    public Unidad update(Unidad newUnidad, Integer id) {
+    public Unidades update(Unidades newUnidad, Integer id) {
         return unidadRepository.findById(id).map(unidad -> {
             unidad.setPiso(newUnidad.getPiso());
             unidad.setNumero(newUnidad.getNumero());
@@ -37,7 +37,7 @@ public class UnidadServiceImpl implements UnidadService {
     }
 
     @Override
-    public List<Unidad> getAll() {
+    public List<Unidades> getAll() {
         return unidadRepository.findAll();
     }
 

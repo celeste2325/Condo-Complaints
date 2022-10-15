@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamos;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,22 +17,22 @@ public class ReclamoServiceImpl implements ReclamoService{
 
     @Override
     @Transactional
-    public void createReclamo(Reclamo newReclamo) {
+    public void createReclamo(Reclamos newReclamo) {
                 newReclamo.getImagenesByIdReclamo().forEach(
                 imagen -> {
-                    imagen.setDataFoto(imagen.getCastBlob().getBytes());
+                    imagen.setDataFoto(imagen.getDataFoto());
                 }
         );
         this.reclamoRepository.save(newReclamo);
     }
 
     @Override
-    public List<Reclamo> getAll() {
+    public List<Reclamos> getAll() {
         return this.reclamoRepository.findAll();
     }
 
     @Override
-    public Reclamo updateEstado(Reclamo newReclamo, Integer id) {
+    public Reclamos updateEstado(Reclamos newReclamo, Integer id) {
         return this.reclamoRepository.findById(id).map(reclamo -> {
             reclamo.setEstado(newReclamo.getEstado());
             return this.reclamoRepository.save(reclamo);
@@ -40,12 +40,12 @@ public class ReclamoServiceImpl implements ReclamoService{
     }
 
     @Override
-    public List<Reclamo> getAllByEstado(String estado) {
+    public List<Reclamos> getAllByEstado(String estado) {
         return this.reclamoRepository.getByEstado(estado);
     }
 
     @Override
-    public Optional<Reclamo> getById(Integer id) {
+    public Optional<Reclamos> getById(Integer id) {
         return this.reclamoRepository.findById(id);
     }
 }
