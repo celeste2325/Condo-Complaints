@@ -15,15 +15,14 @@ public class EdificioServiceImpl implements EdificioService {
     private EdificioRepository edificioRepository;
 
     @Override
-
-    public List<Edificio> getEdificioByName(String name) {
-
-        return edificioRepository.findByNombre(name);
-    }
-
     @Transactional
     public void saveEdificio(Edificio edificio) {
         edificioRepository.save(edificio); /*es conveniente usar try catch?*/
+    }
+
+    @Override
+    public List<Edificio> getEdificioByName(String name) {
+        return null;
     }
 
     @Override

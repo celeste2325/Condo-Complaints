@@ -1,6 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DuenioAsignadoPreviamenteAlAUnidadException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.DuenioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,24 +24,35 @@ public class DuenioRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity crearDueño(@RequestBody Duenio newDuenio){
+    public ResponseEntity crearDueño(@RequestBody DuenioDto newDuenio) {
         try {
-            duenioService.saveDuenio(newDuenio);
+            this.duenioService.saveDuenio(newDuenio);
             return new ResponseEntity(HttpStatus.CREATED);
         }
         catch (Exception e){
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity updateDuenio(@RequestBody Duenio newDuenio, @PathVariable Integer id){
-        return new ResponseEntity<>(duenioService.update(newDuenio, id), HttpStatus.OK);
-    }
+//TODO
+    /*@PutMapping("/{documento}")
+    public ResponseEntity updateDuenio(@RequestBody DuenioDto newD,@RequestBody Integer unidadNueva, @PathVariable String documento) throws DuenioAsignadoPreviamenteAlAUnidadException, DocumentoNoEncontradoException {
+        try {
+            this.duenioService.modificarLaUnidadAsignada(unidadAsignada,unidadNueva ,documento);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteDuenio(@PathVariable Integer id) {
-        duenioService.remove(id);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            duenioService.remove(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 }

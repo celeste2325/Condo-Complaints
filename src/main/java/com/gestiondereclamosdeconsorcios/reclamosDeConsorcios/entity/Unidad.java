@@ -1,8 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -25,6 +27,30 @@ public class Unidad {
     @JoinColumn(name = "codigoEdificio", referencedColumnName = "codigo")
     @JsonBackReference(value = "edificio-unidad")
     private Edificio edificiosByCodigoEdificio;
+
+    @OneToMany(mappedBy = "identificadorInquilino")
+    @JsonManagedReference(value = "unidad-inquilino")
+    private Collection<Inquilino> inquilinosByIdentificador;
+
+    @OneToMany(mappedBy = "identificadorDuenio")
+    @JsonManagedReference(value = "unidad-duenio")
+    private Collection<Duenio> duniosByIdentificador;
+
+    public Collection<Inquilino> getInquilinosByIdentificador() {
+        return inquilinosByIdentificador;
+    }
+
+    public void setInquilinosByIdentificador(Collection<Inquilino> inquilinoByIdentificador) {
+        this.inquilinosByIdentificador = inquilinoByIdentificador;
+    }
+
+    public Collection<Duenio> getDuniosByIdentificador() {
+        return duniosByIdentificador;
+    }
+
+    public void setDuniosByIdentificador(Collection<Duenio> duniosByIdentificador) {
+        this.duniosByIdentificador = duniosByIdentificador;
+    }
 
     public Integer getIdentificador() {
         return identificador;
@@ -58,25 +84,23 @@ public class Unidad {
         this.habitado = habitado;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Unidad that = (Unidad) o;
-        return Objects.equals(identificador, that.identificador) && Objects.equals(piso, that.piso) && Objects.equals(numero, that.numero) && Objects.equals(habitado, that.habitado);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(identificador, piso, numero, habitado);
-    }
-
     public Edificio getEdificiosByCodigoEdificio() {
         return edificiosByCodigoEdificio;
     }
 
-
     public void setEdificiosByCodigoEdificio(Edificio edificiosByCodigoEdificio) {
         this.edificiosByCodigoEdificio = edificiosByCodigoEdificio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Unidad unidad)) return false;
+        return Objects.equals(getIdentificador(), unidad.getIdentificador()) && Objects.equals(getPiso(), unidad.getPiso()) && Objects.equals(getNumero(), unidad.getNumero()) && Objects.equals(getHabitado(), unidad.getHabitado()) && Objects.equals(getEdificiosByCodigoEdificio(), unidad.getEdificiosByCodigoEdificio()) && Objects.equals(getInquilinosByIdentificador(), unidad.getInquilinosByIdentificador()) && Objects.equals(getDuniosByIdentificador(), unidad.getDuniosByIdentificador());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentificador(), getPiso(), getNumero(), getHabitado(), getEdificiosByCodigoEdificio(), getInquilinosByIdentificador(), getDuniosByIdentificador());
     }
 }

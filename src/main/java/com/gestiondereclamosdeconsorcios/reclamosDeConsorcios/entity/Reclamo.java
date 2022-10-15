@@ -30,7 +30,7 @@ public class Reclamo {
     @OneToMany(mappedBy = "reclamosByIdReclamo", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "reclamo-imagen")
     private Collection<Imagen> imagenesByIdReclamo;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "documento", referencedColumnName = "documento", nullable = false)
     @JsonBackReference(value = "reclamo-persona")
     private Persona personasByDocumento;

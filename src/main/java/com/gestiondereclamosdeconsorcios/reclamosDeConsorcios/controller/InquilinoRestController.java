@@ -34,10 +34,10 @@ public class InquilinoRestController {
         this.inquilinoService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @PutMapping("/{id}")
+//TODO
+   /* @PutMapping("/{id}")
     public ResponseEntity<Inquilino> updateInquilino(@RequestBody Inquilino newInquilino, @PathVariable Integer id){
         return new ResponseEntity<>(this.inquilinoService.update(newInquilino,id), HttpStatus.OK);
-    }
+    }*/
 
 }

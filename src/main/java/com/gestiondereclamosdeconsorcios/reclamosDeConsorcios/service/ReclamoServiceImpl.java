@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ReclamoServiceImpl implements ReclamoService{
+public class ReclamoServiceImpl implements ReclamoService {
 
     @Autowired
     ReclamoRepository reclamoRepository;
@@ -18,7 +18,7 @@ public class ReclamoServiceImpl implements ReclamoService{
     @Override
     @Transactional
     public void createReclamo(Reclamo newReclamo) {
-                newReclamo.getImagenesByIdReclamo().forEach(
+        newReclamo.getImagenesByIdReclamo().forEach(
                 imagen -> {
                     imagen.setDataFoto(imagen.getCastBlob().getBytes());
                 }
