@@ -1,6 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoCrearDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoImpresionDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.InquilinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,28 +20,40 @@ public class InquilinoRestController {
     InquilinoService inquilinoService;
 
     @GetMapping("/")
-    public List<Inquilino> getAll(){
+    public List<InquilinoImpresionDto> getInquilinos(){
         return this.inquilinoService.getAll();
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity getInquilinosID(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity<>(inquilinoService.getById(id), HttpStatus.OK);
+        }
+        catch (IdInexistenteException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/getInquilinos/{documento}")
+    public ResponseEntity getInquilinosDocumento(@PathVariable String documento) {
+        try {
+            return new ResponseEntity<>(this.inquilinoService.getByDocumento(documento), HttpStatus.OK);
+        } catch (DocumentoNoEncontradoException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PostMapping("/")
-    public ResponseEntity<Void> saveInquilino(@RequestBody Inquilino newInquilino){
+    public ResponseEntity saveInquilino(@RequestBody InquilinoCrearDto newInquilino){
         try {
             this.inquilinoService.save(newInquilino);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInquilino(@PathVariable Integer id){
         this.inquilinoService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-//TODO
-   /* @PutMapping("/{id}")
-    public ResponseEntity<Inquilino> updateInquilino(@RequestBody Inquilino newInquilino, @PathVariable Integer id){
-        return new ResponseEntity<>(this.inquilinoService.update(newInquilino,id), HttpStatus.OK);
-    }*/
 
 }

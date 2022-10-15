@@ -1,6 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnidadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +22,23 @@ public class UnidadRestController {
         List<Unidad> unidades = unidadService.getAll();
         return unidades;
     }
-    @PostMapping("/")
-    public ResponseEntity CrearUnidad(@RequestBody Unidad newUnidad) {
+    @GetMapping("/getUnidad/{identificador}")
+    public ResponseEntity getUnidadesID(@PathVariable Integer identificador)  {
         try {
-            unidadService.saveUnidad(newUnidad);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(unidadService.getID(identificador), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    @PostMapping("/")
+    public ResponseEntity CrearUnidad(@RequestBody UnidadDto newUnidad) {
+        //TODO COMO DEVOLVER LA UNIDAD O EL NUMERO DEL IDENTIFICADOR
+        try {
+
+            return new ResponseEntity<>(unidadService.saveUnidad(newUnidad),HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -35,8 +48,13 @@ public class UnidadRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Unidad> deleteUnidad(@PathVariable Integer id) {
-        unidadService.remove(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity deleteUnidad(@PathVariable Integer id) {
+        try {
+            unidadService.remove(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

@@ -7,10 +7,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "duenios", schema = "dbo", catalog = "gestion_reclamo_consorcio")
-@PrimaryKeyJoinColumn(name = "documento")
-public class Duenio extends Persona {
-
+public class Duenio{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Basic
     @Column(name = "id")
     private Integer id;
@@ -18,11 +17,35 @@ public class Duenio extends Persona {
     @Column(name = "identificador", updatable = false, insertable = false)
     private Integer identificador;
 
+    @Basic
+    @Column(name = "documento", updatable = false, insertable = false)
+    private String documento;
+
     @ManyToOne
     @JoinColumn(name = "identificador", referencedColumnName = "identificador")
     @JsonBackReference(value = "unidad-duenio")
     private Unidad identificadorDuenio;
 
+    @ManyToOne
+    @JoinColumn(name = "documento", referencedColumnName = "documento")
+    @JsonBackReference(value = "persona-duenio")
+    private Persona persona;
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona personaByDocumento) {
+        this.persona = personaByDocumento;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 
     public Integer getId() {
         return id;
@@ -52,12 +75,11 @@ public class Duenio extends Persona {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Duenio duenio)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(getId(), duenio.getId()) && Objects.equals(getIdentificador(), duenio.getIdentificador()) && Objects.equals(getIdentificadorDuenio(), duenio.getIdentificadorDuenio());
+        return Objects.equals(getId(), duenio.getId()) && Objects.equals(getIdentificador(), duenio.getIdentificador()) && Objects.equals(getDocumento(), duenio.getDocumento()) && Objects.equals(getIdentificadorDuenio(), duenio.getIdentificadorDuenio()) && Objects.equals(getPersona(), duenio.getPersona());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getIdentificador(), getIdentificadorDuenio());
+        return Objects.hash(getId(), getIdentificador(), getDocumento(), getIdentificadorDuenio(), getPersona());
     }
 }

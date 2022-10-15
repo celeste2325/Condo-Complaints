@@ -1,18 +1,22 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadOcupadaException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.*;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoCrearDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoImpresionDto;
 
 import java.util.List;
 
 public interface InquilinoService {
-    List<Inquilino> getAll();
+    List<InquilinoImpresionDto> getAll();
 
-    void save(Inquilino newInquilino) throws UnidadInexistenteException, UnidadOcupadaException;
+    void save(InquilinoCrearDto newInquilino) throws UnidadInexistenteException, UnidadOcupadaException, DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException;
 
     void delete(Integer id);
 
-    //Inquilino update(Inquilino newInquilino, Integer id);
+    InquilinoImpresionDto getById(Integer id) throws IdInexistenteException;
+
+    List<InquilinoImpresionDto> getByDocumento(String documento) throws DocumentoNoEncontradoException;
+
 
 }

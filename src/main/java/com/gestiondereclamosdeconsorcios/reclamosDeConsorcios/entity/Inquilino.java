@@ -7,13 +7,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "inquilinos", schema = "dbo", catalog = "gestion_reclamo_consorcio")
-@PrimaryKeyJoinColumn(name = "documento")
-public class Inquilino extends Persona {
+public class Inquilino{
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Basic
     @Column(name = "id")
     private Integer id;
+
+    @Basic
+    @Column(name = "documento", updatable = false, insertable = false)
+    private String documento;
 
     @Basic
     @Column(name = "identificador", updatable = false, insertable = false)
@@ -23,6 +27,27 @@ public class Inquilino extends Persona {
     @JoinColumn(name = "identificador", referencedColumnName = "identificador")
     @JsonBackReference(value = "unidad-inquilino")
     private Unidad identificadorInquilino;
+
+    @ManyToOne
+    @JoinColumn(name = "documento", referencedColumnName = "documento")
+    @JsonBackReference(value = "persona-inquilino")
+    private Persona persona;
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public Persona getPersona() {
+        return persona;
+    }
+
+    public void setPersona(Persona persona) {
+        this.persona = persona;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 
     public Integer getIdentificador() {
         return identificador;
@@ -52,12 +77,11 @@ public class Inquilino extends Persona {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Inquilino inquilino)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(getId(), inquilino.getId()) && Objects.equals(getIdentificador(), inquilino.getIdentificador()) && Objects.equals(getIdentificadorInquilino(), inquilino.getIdentificadorInquilino());
+        return Objects.equals(getId(), inquilino.getId()) && Objects.equals(getDocumento(), inquilino.getDocumento()) && Objects.equals(getIdentificador(), inquilino.getIdentificador()) && Objects.equals(getIdentificadorInquilino(), inquilino.getIdentificadorInquilino());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getIdentificador(), getIdentificadorInquilino());
+        return Objects.hash(getId(), getDocumento(), getIdentificador(), getIdentificadorInquilino());
     }
 }

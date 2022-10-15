@@ -22,7 +22,10 @@ public class Unidad {
     private String numero;
     @Basic
     @Column(name = "habitado")
-    private String habitado;
+    private String habitado = "N";
+    @Basic
+    @Column(name = "codigoEdificio", insertable = false, updatable = false)
+    private Integer codigoEdificio;
     @ManyToOne
     @JoinColumn(name = "codigoEdificio", referencedColumnName = "codigo")
     @JsonBackReference(value = "edificio-unidad")
@@ -42,6 +45,14 @@ public class Unidad {
 
     public void setInquilinosByIdentificador(Collection<Inquilino> inquilinoByIdentificador) {
         this.inquilinosByIdentificador = inquilinoByIdentificador;
+    }
+
+    public Integer getCodigoEdificio() {
+        return codigoEdificio;
+    }
+
+    public void setCodigoEdificio(Integer codigoEdificio) {
+        this.codigoEdificio = codigoEdificio;
     }
 
     public Collection<Duenio> getDuniosByIdentificador() {
