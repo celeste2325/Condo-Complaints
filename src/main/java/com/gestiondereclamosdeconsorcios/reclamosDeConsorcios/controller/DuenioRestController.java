@@ -5,8 +5,10 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.DuenioServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @RestController
@@ -22,6 +24,7 @@ public class DuenioRestController {
 
     @PostMapping("/")
     public ResponseEntity crearDueño(@RequestBody Duenio newDuenio){
+        System.out.println(new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2A, new SecureRandom("cele".getBytes())));
         try {
             duenioService.saveDuenio(newDuenio);
             return new ResponseEntity(HttpStatus.CREATED);

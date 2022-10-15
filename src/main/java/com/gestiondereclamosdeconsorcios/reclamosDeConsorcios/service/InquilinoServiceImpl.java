@@ -18,6 +18,12 @@ public class InquilinoServiceImpl implements InquilinoService{
     }
 
     @Override
+    public List<Inquilino> getAllByDocument(String Documento) {
+        var value = this.inquilinoRepository.findDistinctByDocumento(Documento);
+        return value;
+    }
+
+    @Override
     public void save(Inquilino newInquilino) {
         this.inquilinoRepository.save(newInquilino);
     }

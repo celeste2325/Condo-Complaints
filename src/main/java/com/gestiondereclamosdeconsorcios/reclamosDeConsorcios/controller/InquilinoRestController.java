@@ -20,6 +20,11 @@ public class InquilinoRestController {
         return this.inquilinoService.getAll();
     }
 
+    @GetMapping("/{documento}")
+    public List<Inquilino> getAllByDocument(@PathVariable String documento){
+        return this.inquilinoService.getAllByDocument(documento);
+    }
+
     @PostMapping("/")
     public ResponseEntity<Void> saveInquilino(@RequestBody Inquilino newInquilino){
         try {

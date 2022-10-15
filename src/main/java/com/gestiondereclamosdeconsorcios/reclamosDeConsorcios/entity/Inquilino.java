@@ -1,5 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -7,9 +9,14 @@ import java.util.Objects;
 @Table(name = "inquilinos", schema = "dbo", catalog = "gestion_reclamo_consorcio")
 @PrimaryKeyJoinColumn(name = "documento")
 public class Inquilino extends Persona {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "id")
+    @EqualsAndHashCode.Include
+    private Integer id;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic
     @Column(name = "identificador")
+    @EqualsAndHashCode.Include
     private Integer identificador;
 
     public Integer getIdentificador() {
@@ -20,15 +27,14 @@ public class Inquilino extends Persona {
         this.identificador = identificador;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Inquilino inquilino)) return false;
-        return Objects.equals(getIdentificador(), inquilino.getIdentificador());
+
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getIdentificador());
+    public void setId(Integer id) {
+        this.id = id;
     }
+
+
 }
