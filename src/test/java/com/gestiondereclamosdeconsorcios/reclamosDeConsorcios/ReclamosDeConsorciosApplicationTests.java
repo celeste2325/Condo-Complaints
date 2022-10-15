@@ -46,10 +46,6 @@ class ReclamosDeConsorciosApplicationTests {
             System.out.printf("id de reclamo:"+reclamos.getIdReclamo());
 
         });
-
-        //fmt
-       // inquilino.
-
     }
 
     @Test
