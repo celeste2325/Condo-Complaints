@@ -1,5 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -22,6 +25,7 @@ public class Unidades {
     private Integer codigoEdificio;
     @ManyToOne
     @JoinColumn(name = "codigoEdificio", referencedColumnName = "codigo")
+    @JsonManagedReference("edificio_unidad")
     private Edificios edificioByCodigoEdificios;
 
     public Integer getIdentificador() {

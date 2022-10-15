@@ -81,7 +81,7 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = this.personaRepository.findPersonaByDocument(username);
+        var user = this.personaRepository.findByDocumento(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }

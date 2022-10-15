@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Personas getUser(String documento, String contrasenia) throws UsuarioOContraseniaIncorrecta {
-        var usuarioEncontrada = this.personaRepository.findPersonaByDocument(documento);
+        var usuarioEncontrada = this.personaRepository.findByDocumento(documento);
         if (usuarioEncontrada != null) {
             if (this.bCryptPasswordEncoder.matches(contrasenia, usuarioEncontrada.getContrasenia())){
                 return usuarioEncontrada;

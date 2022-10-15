@@ -1,5 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -31,9 +34,11 @@ public class Reclamos {
     private Collection<Imagenes> imagenesByIdReclamo;
     @ManyToOne
     @JoinColumn(name = "documento", referencedColumnName = "documento", nullable = false)
+    @JsonBackReference("personas_reclamo")
     private Personas personasByDocumento;
     @ManyToOne
     @JoinColumn(name = "codigo", referencedColumnName = "codigo", nullable = false)
+    @JsonBackReference("reclamo_edifcio")
     private Edificios edificiosByCodigo;
 
     public Integer getIdReclamo() {

@@ -1,5 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -16,8 +19,10 @@ public class Edificios {
     @Column(name = "direccion", nullable = false, length = 100)
     private String direccion;
     @OneToMany(mappedBy = "edificiosByCodigo")
+    @JsonManagedReference("reclamo_edifcio")
     private Collection<Reclamos> reclamosByCodigo;
     @OneToMany(mappedBy = "edificioByCodigoEdificios")
+    @JsonBackReference("edificio_unidad")
     private Collection<Unidades> unidadesByCodigo;
 
     public Integer getCodigo() {

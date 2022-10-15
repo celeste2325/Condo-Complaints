@@ -1,6 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.DuenioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.InquilinoRepository;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +19,9 @@ class ReclamosDeConsorciosApplicationTests {
 
     @Autowired
     InquilinoRepository inquiRepo;
+
+    @Autowired
+    DuenioRepository duenosRepo;
 
 
     @Test
@@ -35,6 +41,20 @@ class ReclamosDeConsorciosApplicationTests {
     @Test
     void TestInquilinoRepo() {
 
+        var duenos = duenosRepo.findByDocumento("CI 13230978");
+        duenos.get(0).getPersonasByDocumento().getReclamosByDocumento().forEach(reclamos -> {
+            System.out.printf("id de reclamo:"+reclamos.getIdReclamo());
+
+        });
+
+        //fmt
+       // inquilino.
+
+    }
+
+    @Test
+    void TestGetDueno() {
+
         var inquilino = inquiRepo.findDistinctByDocumento("CI 13230978");
         inquilino.forEach(inquilino1 -> {
             System.out.println("identificador:"+inquilino1.getIdentificador().toString());
@@ -42,7 +62,16 @@ class ReclamosDeConsorciosApplicationTests {
         });
         System.out.printf(inquilino.toString());
         //fmt
-       // inquilino.
+        // inquilino.
+
+    }
+
+    @Test
+    void TestSegurizacion(){
+
+        String jsonMimeType = "application/json";
+        HttpUriRequest request = new HttpGet( "https://localhost:8080/api/inquilino/" );
+
 
     }
 

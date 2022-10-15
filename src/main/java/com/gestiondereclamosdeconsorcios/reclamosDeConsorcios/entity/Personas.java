@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.config.security.UserGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,10 +25,13 @@ public class Personas implements UserDetails {
     @Column(name = "contrasenia", nullable = true, length = 60)
     private String contrasenia;
     @OneToMany(mappedBy = "personasByDocumento")
+    @JsonManagedReference("personas_dueno")
     private Collection<Duenios> dueniosByDocumento;
     @OneToMany(mappedBy = "personasByDocumento")
+    @JsonManagedReference("personas_inquilino")
     private Collection<Inquilinos> inquilinosByDocumento;
-    @OneToMany(mappedBy = "personasByDocumento")
+    @OneToMany(mappedBy = "personasByDocumento",fetch = FetchType.EAGER)
+    @JsonManagedReference("personas_reclamo")
     private Collection<Reclamos> reclamosByDocumento;
 
     public String getDocumento() {
@@ -133,7 +137,7 @@ public class Personas implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

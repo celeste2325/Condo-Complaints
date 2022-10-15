@@ -1,5 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +19,7 @@ public class Inquilinos {
     private String documento;
     @ManyToOne
     @JoinColumn(name = "documento", referencedColumnName = "documento", nullable = false)
+    @JsonBackReference("personas_inquilino")
     private Personas personasByDocumento;
 
     public Integer getId() {
