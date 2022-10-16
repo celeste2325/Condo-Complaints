@@ -1,8 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadImpresionDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,4 +10,6 @@ public interface UnidadRepository extends JpaRepository<Unidad, Integer> {
     Integer saveUnidad(String piso, String numero, Integer codigoEdificio);
 
     boolean existsByPisoAndNumeroAndCodigoEdificio(String numero, String piso, Integer codigoEdificio);
+
+    boolean existsByIdentificadorAndCodigoEdificio(Integer identificador, Integer codigoEdificio);
 }

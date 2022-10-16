@@ -1,7 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.*;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoImpresionDto;
 
@@ -19,4 +18,5 @@ public interface InquilinoService {
     List<InquilinoImpresionDto> getByDocumento(String documento) throws DocumentoNoEncontradoException;
 
 
+    void liberarUnidad(Integer identificadorUnidad, Integer codigoEdificio) throws UnidadInexistenteException;
 }

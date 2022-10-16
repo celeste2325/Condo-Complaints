@@ -2,7 +2,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoImpresionDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.InquilinoService;
@@ -55,5 +55,17 @@ public class InquilinoRestController {
         this.inquilinoService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/{identificadorUnidad}/{codigoEdificio}")
+    public ResponseEntity liberarUnidad(@PathVariable Integer identificadorUnidad,@PathVariable Integer codigoEdificio) throws UnidadInexistenteException {
+        try {
+            this.inquilinoService.liberarUnidad(identificadorUnidad, codigoEdificio);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
 }

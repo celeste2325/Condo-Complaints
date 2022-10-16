@@ -20,10 +20,11 @@ public class Imagen {
     @Basic
     @Column(name = "tipo")
     private String tipo;
+
     @ManyToOne
     @JoinColumn(name = "idReclamo", referencedColumnName = "idReclamo")
     @JsonBackReference(value = "reclamo-imagen")
-    private Reclamo reclamosByIdReclamo;
+    private Reclamo reclamosByIdReclamo = new Reclamo();
     @JsonInclude
     @Transient
     private String castBlob;

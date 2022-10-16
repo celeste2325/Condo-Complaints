@@ -5,7 +5,6 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.LaUnida
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadImpresionDto;
 
 import java.util.List;
 

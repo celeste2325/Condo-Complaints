@@ -5,7 +5,6 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.LaUnida
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadImpresionDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;

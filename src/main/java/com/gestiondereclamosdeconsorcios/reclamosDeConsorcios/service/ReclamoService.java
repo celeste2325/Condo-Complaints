@@ -1,13 +1,15 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.EdificioNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReclamoService {
 
-    void createReclamo(Reclamo newReclamo);
+    Reclamo createReclamo(Reclamo newReclamo) throws EdificioNoEncontradoException, UnidadInexistenteException;
 
     List<Reclamo> getAll();
 
@@ -15,6 +17,6 @@ public interface ReclamoService {
 
     List<Reclamo> getAllByEstado(String estado);
 
-    Optional<Reclamo> getById(Integer id);
+    List<Reclamo> getReclamos(Integer codigoEdificio,Integer codigoUnidad,Integer idReclamo) throws SinReclamosCargadosException;
 
 }

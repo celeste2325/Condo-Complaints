@@ -1,8 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnidadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,6 @@ public class UnidadRestController {
     }
     @PostMapping("/")
     public ResponseEntity CrearUnidad(@RequestBody UnidadDto newUnidad) {
-        //TODO COMO DEVOLVER LA UNIDAD O EL NUMERO DEL IDENTIFICADOR
         try {
 
             return new ResponseEntity<>(unidadService.saveUnidad(newUnidad),HttpStatus.CREATED);

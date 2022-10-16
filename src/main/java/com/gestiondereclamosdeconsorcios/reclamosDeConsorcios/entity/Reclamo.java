@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -25,17 +26,20 @@ public class Reclamo {
     @Column(name = "descripcion")
     private String descripcion;
     @Basic
+    @Column(name = "codigo")
+    private Integer codigoEdificio;
+    @Basic
     @Column(name = "identificador")
     private Integer identificador;
     @OneToMany(mappedBy = "reclamosByIdReclamo", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "reclamo-imagen")
-    private Collection<Imagen> imagenesByIdReclamo;
+    private Collection<Imagen> imagenesByIdReclamo = new ArrayList<>();
     @ManyToOne()
     @JoinColumn(name = "documento", referencedColumnName = "documento", nullable = false)
     @JsonBackReference(value = "reclamo-persona")
     private Persona personasByDocumento;
     @ManyToOne
-    @JoinColumn(name = "codigo", referencedColumnName = "codigo", nullable = false)
+    @JoinColumn(name = "codigo", referencedColumnName = "codigo", insertable = false, updatable = false)
     @JsonBackReference(value = "edificio-reclamo")
     private Edificio edificiosByCodigo;
 
@@ -45,6 +49,14 @@ public class Reclamo {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Integer getCodigoEdificio() {
+        return codigoEdificio;
+    }
+
+    public void setCodigoEdificio(Integer codigoEdificio) {
+        this.codigoEdificio = codigoEdificio;
     }
 
     public Integer getIdReclamo() {

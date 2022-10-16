@@ -13,4 +13,7 @@ public interface InquilinoRepository extends JpaRepository<Inquilino, Integer> {
 
     @Query(value = "SET NOCOUNT ON insert Into inquilinos (identificador, documento) values (?1, ?2) select @@identity", nativeQuery = true)
     void asignarDuenio(Integer identificador, String documento);
+
+    @Query(value = "SET NOCOUNT ON delete from inquilinos where identificador =?1 select @@identity", nativeQuery = true)
+    void deleteByIdentificador(Integer identificadorUnidad);
 }

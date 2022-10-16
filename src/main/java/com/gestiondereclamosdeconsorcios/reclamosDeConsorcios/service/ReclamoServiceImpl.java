@@ -1,29 +1,48 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.EdificioNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReclamoServiceImpl implements ReclamoService {
 
     @Autowired
     ReclamoRepository reclamoRepository;
+    @Autowired
+    EdificioRepository edificioRepository;
+    @Autowired
+    UnidadRepository unidadRepository;
+
+    @Autowired
+    ImagenRepository imagenRepository;
 
     @Override
     @Transactional
-    public void createReclamo(Reclamo newReclamo) {
-        newReclamo.getImagenesByIdReclamo().forEach(
-                imagen -> {
-                    imagen.setDataFoto(imagen.getCastBlob().getBytes());
-                }
-        );
-        this.reclamoRepository.save(newReclamo);
+    public Reclamo createReclamo(Reclamo newReclamo) throws EdificioNoEncontradoException, UnidadInexistenteException {
+        boolean existEdificio = this.edificioRepository.existsById(newReclamo.getCodigoEdificio());
+        boolean unidadCorrespondeAlEdificio = this.unidadRepository.existsByIdentificadorAndCodigoEdificio(newReclamo.getIdentificador(),newReclamo.getCodigoEdificio());
+        //VALIDAR QUE LA PERSONA ES INQUILINA DE LA PROPIEDAD QUE ESTA DEJANDO EL RECLAMO
+        if (existEdificio) {
+            if (unidadCorrespondeAlEdificio) {
+                newReclamo.getImagenesByIdReclamo().forEach(
+                        imagen -> {
+                            imagen.setDataFoto(imagen.getCastBlob().getBytes());
+                        }
+                );
+                return this.reclamoRepository.save(newReclamo);
+            } else throw new UnidadInexistenteException("La unidad no existe en el edificio");
+        }  else throw new EdificioNoEncontradoException("El edificio no existe");
     }
 
     @Override
@@ -45,7 +64,12 @@ public class ReclamoServiceImpl implements ReclamoService {
     }
 
     @Override
-    public Optional<Reclamo> getById(Integer id) {
-        return this.reclamoRepository.findById(id);
+    public List<Reclamo> getReclamos(Integer codigoEdificio,Integer codigoUnidad,Integer idReclamo) throws SinReclamosCargadosException {
+        List<Reclamo> reclamos = this.reclamoRepository.findAllByCodigoEdificioOrIdentificadorOrIdReclamo(codigoEdificio,codigoUnidad,idReclamo);
+        if (!reclamos.isEmpty()) {
+            return reclamos;
+        }else throw new SinReclamosCargadosException("No existen reclamos cargados");
+
     }
+
 }

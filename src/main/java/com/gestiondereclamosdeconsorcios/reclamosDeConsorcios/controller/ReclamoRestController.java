@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ReclamoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/reclamo")
@@ -18,11 +18,9 @@ public class ReclamoRestController {
     @PostMapping("/")
     public ResponseEntity createNewReclamo(@RequestBody Reclamo newReclamo) {
         try {
-            this.reclamoService.createReclamo(newReclamo);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(this.reclamoService.createReclamo(newReclamo),HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -36,14 +34,19 @@ public class ReclamoRestController {
         return this.reclamoService.getAllByEstado(estado);
     }
 
-    @GetMapping("/{id}")
-    public Optional<Reclamo> getReclamosPorEstado(@PathVariable Integer id){
-        return this.reclamoService.getById(id);
+    @GetMapping("/getReclamos")
+    public ResponseEntity getReclamos(@RequestParam(name = "codigoEdificio",defaultValue = "0") Integer codigoEdificio, @RequestParam(name = "codigoUnidad" ,defaultValue = "0") Integer codigoUnidad, @RequestParam(name = "idReclamo", defaultValue = "0") Integer idReclamo)
+    {
+        try {
+            return new ResponseEntity<>(this.reclamoService.getReclamos(codigoEdificio,codigoUnidad,idReclamo), HttpStatus.OK);
+        } catch (SinReclamosCargadosException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity updateEstadoReclamo(@RequestBody Reclamo reclamo, @PathVariable Integer id){
         return new ResponseEntity(this.reclamoService.updateEstado(reclamo, id), HttpStatus.OK);
     }
+
 }

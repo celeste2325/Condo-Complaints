@@ -1,9 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.config.UserGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;

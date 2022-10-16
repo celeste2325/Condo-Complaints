@@ -1,8 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.*;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoAsignadoPreviamenteAlAUnidadException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoImpresionDto;
@@ -12,6 +14,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadR
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,30 +61,45 @@ public class InquilinoServiceImpl implements InquilinoService {
     }
 
     @Override
-    public void save(InquilinoCrearDto newInquilino) throws UnidadInexistenteException, UnidadOcupadaException, DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException {
-        //para validar si la persona a la que se quiere asignar como dueño ya existe en la base
-        Optional<Persona> personaEncontrada = this.personaRepository.findById(newInquilino.getDocumento());
-        if (this.losDatosSonValidos(newInquilino)) {
-            if (personaEncontrada.isPresent()) {
-                this.inquilinoRepository.asignarDuenio(newInquilino.getIdentificador(), newInquilino.getDocumento());
-            } else
-                throw new DocumentoNoEncontradoException("El documento del inquilino que desea asignar no corresponde a una persona registrada en el consorcio");
-        }
+    public void liberarUnidad(Integer identificadorUnidad, Integer codigoEdificio) throws UnidadInexistenteException {
+        Optional<Unidad> unidad = this.unidadRepository.findById(identificadorUnidad);
+
+        if (unidad.isPresent()) {
+            if (unidad.get().getCodigoEdificio() == codigoEdificio) {
+                this.inquilinoRepository.deleteByIdentificador(identificadorUnidad);
+                unidad.get().setHabitado("N");
+                this.unidadRepository.save(unidad.get());
+            } else throw new UnidadInexistenteException("No existe una unidad en el edificio ingresado");
+
+        } else throw new UnidadInexistenteException("Unidad inexistente");
+
     }
-    private boolean losDatosSonValidos(InquilinoCrearDto inquilinoNvo) throws DocumentoAsignadoPreviamenteAlAUnidadException {
+
+    @Transactional
+    @Override
+    public void save(InquilinoCrearDto newInquilino) throws DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException, UnidadInexistenteException {
+        //para validar si la persona a la que se quiere asignar como dueño ya existe en la base
+        boolean existeLaPersona = this.personaRepository.existsById(newInquilino.getDocumento());
+
         //para validar si existe la unidad a la cual quiere asignar el dueño.
-        Optional<Unidad> unidadEncontrada = this.unidadRepository.findById(inquilinoNvo.getIdentificador());
+        Optional<Unidad> unidad = this.unidadRepository.findById(newInquilino.getIdentificador());
 
         //para validar si el dueño a asignar ya fue asignado a esa misma unidad
-        boolean yaFueAsignado = this.inquilinoRepository.existsByDocumentoAndIdentificador(inquilinoNvo.getDocumento(), unidadEncontrada.get().getIdentificador());
-        if (unidadEncontrada.isPresent()) {
-            if (!yaFueAsignado) {
-                return true;
-            } else
-                throw new DocumentoAsignadoPreviamenteAlAUnidadException("Ya el inquilino fue asignado previamente a la unidad");
-        }
-        return false;
+        boolean yaFueAsignado = this.inquilinoRepository.existsByDocumentoAndIdentificador(newInquilino.getDocumento(), unidad.get().getIdentificador());
 
+        if (existeLaPersona) {
+            if (unidad.isPresent()) {
+                if (!yaFueAsignado) {
+                    unidad.get().setHabitado("S");
+                    this.unidadRepository.save(unidad.get());
+                    this.inquilinoRepository.asignarDuenio(newInquilino.getIdentificador(), newInquilino.getDocumento());
+                    System.out.println(unidad.get().getHabitado());
+                } else
+                    throw new DocumentoAsignadoPreviamenteAlAUnidadException("Ya el inquilino fue asignado previamente a la unidad");
+            } else
+                throw new UnidadInexistenteException("La unidad no existe");
+        }else
+            throw new DocumentoNoEncontradoException("El documento del inquilino que desea asignar no corresponde a una persona registrada en el consorcio");
     }
 
     @Override
