@@ -1,10 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoAsignadoPreviamenteAlAUnidadException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.*;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioImpresionDto;
@@ -69,26 +68,24 @@ public class DuenioServiceImpl implements DuenioService {
     }
 
     @Override
-    public DuenioImpresionDto getById(Integer id) throws IdInexistenteException {
-        Optional<Duenio> duenio = this.duenioRepository.findById(id);
-        if (duenio.isPresent()) {
-            return new DuenioImpresionDto(duenio.get());
-        }else throw new IdInexistenteException("El id ingresado no corresponde a un dueño registrado");
+    public List<Duenio> dueniosPorEdificio(Integer codigo) {
+        System.out.println(this.duenioRepository.dueniosPorEdificio(codigo));
+        return this.duenioRepository.dueniosPorEdificio(codigo);
     }
 
     @Override
-    public List<DuenioImpresionDto> getByDocumento(String documento) throws DocumentoNoEncontradoException {
+    public List<DuenioImpresionDto> getDuenios(Integer codigoUnidad, Integer idDuenio, String documento) throws NoSeEncontraronDueniosException {
         List<DuenioImpresionDto> dueniosDto = new ArrayList<>();
-        List<Duenio> duenios = this.duenioRepository.findByDocumento(documento);
+        List<Duenio> duenios = this.duenioRepository.findAllByIdentificadorOrIdOrDocumento(codigoUnidad,idDuenio,documento);
         if (!duenios.isEmpty()) {
             duenios.stream().forEach(duenio -> {
                 DuenioImpresionDto duenioDto = new DuenioImpresionDto(duenio);
                 dueniosDto.add(duenioDto);
             });
-        } else throw new DocumentoNoEncontradoException("El dni ingresado no corresponde a un dueño del consorcio");
-
+        }else throw new NoSeEncontraronDueniosException("No se encontraron dueños");
         return dueniosDto;
     }
+
     @Override
     public void remove(Integer id) {
         duenioRepository.deleteById(id);

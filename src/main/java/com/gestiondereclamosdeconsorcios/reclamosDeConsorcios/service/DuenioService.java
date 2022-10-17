@@ -1,10 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoAsignadoPreviamenteAlAUnidadException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.*;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioImpresionDto;
 
@@ -17,7 +15,7 @@ public interface DuenioService {
 
     void remove(Integer id);
 
-    DuenioImpresionDto getById(Integer id) throws IdInexistenteException;
+    List<Duenio> dueniosPorEdificio(Integer codigo);
 
-    List<DuenioImpresionDto> getByDocumento(String documento) throws DocumentoNoEncontradoException;
+    List<DuenioImpresionDto> getDuenios(Integer codigoUnidad, Integer idDuenio, String documento) throws NoSeEncontraronDueniosException;
 }

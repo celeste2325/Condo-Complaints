@@ -1,6 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.EdificioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +29,27 @@ public class EdificioRestController {
 
     @GetMapping("/")
     public List<Edificio> getEdificios() {
-        List<Edificio> edificios = this.edificioService.getAll();
-        return edificios;
+        try {
+            return this.edificioService.getAll();
+        } catch (Exception e) {
+           e.getMessage();
+        }
+        return null;
+    }
+    @GetMapping("/habitantes/{codigo}")
+    public List<Inquilino> getHabitantesEdificio(@PathVariable Integer codigo) {
+        try {
+            return this.edificioService.getHabitantes(codigo);
+        }
+        catch (Exception e) {
+            e.getMessage();
+        }
+
+        return null;
+    }
+    @GetMapping("/habilitados/{codigo}")
+    public List<Inquilino> getHabilitadosEdificio(@PathVariable Integer codigo) {
+        return this.edificioService.getHabilitados(codigo);
     }
 
     @DeleteMapping("/{id}")

@@ -33,6 +33,15 @@ public class Inquilino{
     @JsonBackReference(value = "persona-inquilino")
     private Persona persona;
 
+    public Inquilino(Integer id, Integer identificador, String documento) {
+        this.id = id;
+        this.identificador = identificador;
+        this.documento = documento;
+    }
+
+    public Inquilino() {
+    }
+
     public String getDocumento() {
         return documento;
     }

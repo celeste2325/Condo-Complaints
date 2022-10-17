@@ -17,7 +17,6 @@ import java.util.Optional;
 public class UnidadServiceImpl implements UnidadService {
     @Autowired
     private UnidadRepository unidadRepository;
-
     @Autowired
     private EdificioRepository edificioRepository;
 
