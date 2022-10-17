@@ -53,7 +53,7 @@ public class EdificioServiceImpl implements EdificioService {
 
     @Override
     public List<Inquilino> getHabilitados(Integer codigo) {
-        List<Object[]> habilitados=  this.edificioRepository.getHabilitados(codigo);
+        List<Object[]> habilitados = this.edificioRepository.getHabilitados(codigo);
         return habilitados
                 .stream()
                 .map(habilitado -> new Inquilino(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))

@@ -32,18 +32,19 @@ public class InquilinoServiceImpl implements InquilinoService {
     @Override
     public List<InquilinoImpresionDto> getAll() {
         List<InquilinoImpresionDto> inquilinos = new ArrayList<>();
-        inquilinoRepository.findAll().stream().forEach(inquilino ->{
+        inquilinoRepository.findAll().stream().forEach(inquilino -> {
             InquilinoImpresionDto inquilinoDto = new InquilinoImpresionDto(inquilino);
             inquilinos.add(inquilinoDto);
         });
         return inquilinos;
     }
+
     @Override
     public InquilinoImpresionDto getById(Integer id) throws IdInexistenteException {
         Optional<Inquilino> inquilino = this.inquilinoRepository.findById(id);
         if (inquilino.isPresent()) {
             return new InquilinoImpresionDto(inquilino.get());
-        }else throw new IdInexistenteException("El id ingresado no corresponde a un inquilino registrado");
+        } else throw new IdInexistenteException("El id ingresado no corresponde a un inquilino registrado");
     }
 
     @Override
@@ -98,7 +99,7 @@ public class InquilinoServiceImpl implements InquilinoService {
                     throw new DocumentoAsignadoPreviamenteAlAUnidadException("Ya el inquilino fue asignado previamente a la unidad");
             } else
                 throw new UnidadInexistenteException("La unidad no existe");
-        }else
+        } else
             throw new DocumentoNoEncontradoException("El documento del inquilino que desea asignar no corresponde a una persona registrada en el consorcio");
     }
 

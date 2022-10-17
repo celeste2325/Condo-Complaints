@@ -18,6 +18,6 @@ public interface ReclamoService {
 
     List<Reclamo> getAllByEstado(String estado);
 
-    List<Reclamo> getReclamos(Integer codigoEdificio,Integer codigoUnidad,Integer idReclamo) throws SinReclamosCargadosException;
+    List<Reclamo> getReclamos(Integer codigoEdificio, Integer codigoUnidad, Integer idReclamo) throws SinReclamosCargadosException;
 
 }

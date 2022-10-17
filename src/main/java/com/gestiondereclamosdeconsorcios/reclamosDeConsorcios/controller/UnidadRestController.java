@@ -1,5 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnidadService;
@@ -15,13 +17,15 @@ import java.util.List;
 public class UnidadRestController {
     @Autowired
     UnidadService unidadService;
+
     @GetMapping("/")
     public List<Unidad> getUnidades() {
         List<Unidad> unidades = unidadService.getAll();
         return unidades;
     }
+
     @GetMapping("/getUnidad/{identificador}")
-    public ResponseEntity getUnidadesID(@PathVariable Integer identificador)  {
+    public ResponseEntity getUnidadesID(@PathVariable Integer identificador) {
         try {
             return new ResponseEntity<>(unidadService.getID(identificador), HttpStatus.OK);
         } catch (Exception e) {
@@ -29,13 +33,14 @@ public class UnidadRestController {
         }
 
     }
+
     @PostMapping("/")
     public ResponseEntity CrearUnidad(@RequestBody UnidadDto newUnidad) {
         try {
 
-            return new ResponseEntity<>(unidadService.saveUnidad(newUnidad),HttpStatus.CREATED);
+            return new ResponseEntity<>(unidadService.saveUnidad(newUnidad), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,7 +54,7 @@ public class UnidadRestController {
         try {
             unidadService.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

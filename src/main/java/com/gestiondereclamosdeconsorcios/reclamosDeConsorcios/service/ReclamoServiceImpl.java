@@ -34,7 +34,7 @@ public class ReclamoServiceImpl implements ReclamoService {
     @Transactional
     public Reclamo createReclamo(Reclamo newReclamo) throws EdificioNoEncontradoException, UnidadInexistenteException, NoEstaHabilitadoParaRealizarUnReclamo {
         boolean existEdificio = this.edificioRepository.existsById(newReclamo.getCodigoEdificio());
-        boolean unidadCorrespondeAlEdificio = this.unidadRepository.existsByIdentificadorAndCodigoEdificio(newReclamo.getIdentificador(),newReclamo.getCodigoEdificio());
+        boolean unidadCorrespondeAlEdificio = this.unidadRepository.existsByIdentificadorAndCodigoEdificio(newReclamo.getIdentificador(), newReclamo.getCodigoEdificio());
 
         if (existEdificio) {
             if (unidadCorrespondeAlEdificio) {
@@ -52,9 +52,10 @@ public class ReclamoServiceImpl implements ReclamoService {
                             }
                     );
                     return this.reclamoRepository.save(newReclamo);
-                } else throw new NoEstaHabilitadoParaRealizarUnReclamo("El documento ingresado no pertenece a un dueño/inquilino del edificio");
+                } else
+                    throw new NoEstaHabilitadoParaRealizarUnReclamo("El documento ingresado no pertenece a un dueño/inquilino del edificio");
             } else throw new UnidadInexistenteException("La unidad no existe en el edificio");
-        }  else throw new EdificioNoEncontradoException("El edificio no existe");
+        } else throw new EdificioNoEncontradoException("El edificio no existe");
     }
 
     @Override
@@ -76,11 +77,11 @@ public class ReclamoServiceImpl implements ReclamoService {
     }
 
     @Override
-    public List<Reclamo> getReclamos(Integer codigoEdificio,Integer codigoUnidad,Integer idReclamo) throws SinReclamosCargadosException {
-        List<Reclamo> reclamos = this.reclamoRepository.findAllByCodigoEdificioOrIdentificadorOrIdReclamo(codigoEdificio,codigoUnidad,idReclamo);
+    public List<Reclamo> getReclamos(Integer codigoEdificio, Integer codigoUnidad, Integer idReclamo) throws SinReclamosCargadosException {
+        List<Reclamo> reclamos = this.reclamoRepository.findAllByCodigoEdificioOrIdentificadorOrIdReclamo(codigoEdificio, codigoUnidad, idReclamo);
         if (!reclamos.isEmpty()) {
             return reclamos;
-        }else throw new SinReclamosCargadosException("No existen reclamos cargados");
+        } else throw new SinReclamosCargadosException("No existen reclamos cargados");
 
     }
 

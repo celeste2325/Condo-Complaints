@@ -1,10 +1,13 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.EdificioNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ElDocumentoNoCorrespondeAUnInquilino_duenioDeLaUnidadException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.LaUnidadYaFueCreada;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.DuenioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,9 @@ public class UnidadServiceImpl implements UnidadService {
     @Autowired
     private EdificioRepository edificioRepository;
 
+    @Autowired
+    private DuenioRepository dueniosRepository;
+
     public UnidadServiceImpl(UnidadRepository unidadRepository) {
         this.unidadRepository = unidadRepository;
     }
@@ -27,11 +33,12 @@ public class UnidadServiceImpl implements UnidadService {
     @Override
     public Integer saveUnidad(UnidadDto unidad) throws EdificioNoEncontradoException, LaUnidadYaFueCreada {
         if (this.edificioRepository.existsById(unidad.getCodigoEdificio())) {
-            if (!this.unidadRepository.existsByPisoAndNumeroAndCodigoEdificio(unidad.getPiso(),unidad.getNumero(), unidad.getCodigoEdificio())) {
+            if (!this.unidadRepository.existsByPisoAndNumeroAndCodigoEdificio(unidad.getPiso(), unidad.getNumero(), unidad.getCodigoEdificio())) {
                 return this.unidadRepository.saveUnidad(unidad.getPiso(), unidad.getNumero(), unidad.getCodigoEdificio());
             } else throw new LaUnidadYaFueCreada("La unidad que intenta crear ya existe en el edificio");
 
-        }else throw new EdificioNoEncontradoException("El código del edificio ingresado no corresponde a un edificio del consorcio");
+        } else
+            throw new EdificioNoEncontradoException("El código del edificio ingresado no corresponde a un edificio del consorcio");
     }
 
     @Override
@@ -59,7 +66,7 @@ public class UnidadServiceImpl implements UnidadService {
         Optional<Unidad> unidad = this.unidadRepository.findById(identificador);
         if (unidad.isPresent()) {
             return unidad.get();
-        }else throw new UnidadInexistenteException("El id ingresado no corresponde a una unidad existente");
+        } else throw new UnidadInexistenteException("El id ingresado no corresponde a una unidad existente");
     }
 
 }

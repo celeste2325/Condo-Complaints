@@ -42,22 +42,22 @@ public class SecurityConfig {
         };
     }
 
-   @Bean
-   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-      http.csrf()
-              .disable()
-              .authorizeRequests()
-              .antMatchers("/**/authenticate")
-              .permitAll()
-              .anyRequest()
-              .authenticated()
-              .and()
-              .httpBasic(withDefaults());
-      return http.build();
-   }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/**/authenticate")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic(withDefaults());
+        return http.build();
+    }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2A, new SecureRandom("cele".getBytes()));
     }
 
@@ -69,7 +69,6 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
-
 
 
     @Bean

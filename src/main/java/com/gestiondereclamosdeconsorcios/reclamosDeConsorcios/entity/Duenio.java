@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "duenios", schema = "dbo", catalog = "gestion_reclamo_consorcio")
-public class Duenio{
+public class Duenio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Basic

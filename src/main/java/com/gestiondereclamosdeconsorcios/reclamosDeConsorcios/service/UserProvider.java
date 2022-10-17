@@ -40,7 +40,7 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
     }
 
     public void createAdmin(UserDetails personaLogin) {
-        var AminPersona = (Persona)personaLogin;
+        var AminPersona = (Persona) personaLogin;
         this.personaRepository.save(AminPersona);
     }
 

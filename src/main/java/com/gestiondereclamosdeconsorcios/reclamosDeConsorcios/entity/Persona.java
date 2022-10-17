@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "personas", schema = "dbo", catalog = "gestion_reclamo_consorcio")
-public class Persona implements UserDetails{
+public class Persona implements UserDetails {
 
     @Id
     @Column(name = "documento")
@@ -115,6 +115,7 @@ public class Persona implements UserDetails{
     public void setReclamosByDocumento(Collection<Reclamo> reclamosByDocumento) {
         this.reclamosByDocumento = reclamosByDocumento;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         UserGrantedAuthority rol = new UserGrantedAuthority(this.getRoles());

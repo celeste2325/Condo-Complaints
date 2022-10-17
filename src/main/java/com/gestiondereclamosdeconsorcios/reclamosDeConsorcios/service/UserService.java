@@ -6,7 +6,8 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Usuario
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 
 public interface UserService {
-    public Persona saveUser(Persona personaLogin) throws UsuarioNoEsDuenioNiIquilinoDelEdificioException, UsuarioCreadoException;
-    public Persona getUser(String documento, String contrasenia) throws UsuarioOContraseniaIncorrecta;
+    Persona saveUser(Persona personaLogin) throws UsuarioNoEsDuenioNiIquilinoDelEdificioException, UsuarioCreadoException;
+
+    String getUser(String documento, String contrasenia) throws UsuarioOContraseniaIncorrecta;
 }
 

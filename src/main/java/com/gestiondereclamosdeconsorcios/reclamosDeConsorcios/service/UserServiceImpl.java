@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
 
@@ -34,13 +34,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Persona getUser(String documento, String contrasenia) throws UsuarioOContraseniaIncorrecta {
+    public String getUser(String documento, String contrasenia) throws UsuarioOContraseniaIncorrecta {
         Optional<Persona> usuarioEncontrado = this.personaRepository.findById(documento);
         if (usuarioEncontrado.isPresent()) {
-            if (this.bCryptPasswordEncoder.matches(contrasenia, usuarioEncontrado.get().getContrasenia())){
-                return usuarioEncontrado.get();
-            }else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
-        } else throw  new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
+            if (this.bCryptPasswordEncoder.matches(contrasenia, usuarioEncontrado.get().getContrasenia())) {
+                return usuarioEncontrado.get().getRoles();
+            } else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
+        } else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
     }
 
 }

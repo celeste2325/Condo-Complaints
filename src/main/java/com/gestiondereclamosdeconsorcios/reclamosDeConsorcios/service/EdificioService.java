@@ -2,7 +2,6 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 
 import java.util.List;
 

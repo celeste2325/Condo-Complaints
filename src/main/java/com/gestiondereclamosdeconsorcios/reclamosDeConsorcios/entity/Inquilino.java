@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "inquilinos", schema = "dbo", catalog = "gestion_reclamo_consorcio")
-public class Inquilino{
+public class Inquilino {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -46,16 +46,16 @@ public class Inquilino{
         return documento;
     }
 
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
+
     public Persona getPersona() {
         return persona;
     }
 
     public void setPersona(Persona persona) {
         this.persona = persona;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
     }
 
     public Integer getIdentificador() {
@@ -70,16 +70,16 @@ public class Inquilino{
         return identificadorInquilino;
     }
 
+    public void setIdentificadorInquilino(Unidad unidadByIdentificador_inquilino) {
+        this.identificadorInquilino = unidadByIdentificador_inquilino;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setIdentificadorInquilino(Unidad unidadByIdentificador_inquilino) {
-        this.identificadorInquilino = unidadByIdentificador_inquilino;
     }
 
     @Override

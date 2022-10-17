@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ImagenServiceImpl implements ImagenService{
+public class ImagenServiceImpl implements ImagenService {
     @Autowired
     ImagenRepository imagenRepository;
 
@@ -21,15 +21,15 @@ public class ImagenServiceImpl implements ImagenService{
     @Override
     public void agregarImagen(ImagenDto imagenes) throws ReclamoInexistenteException {
         Optional<Reclamo> reclamo = this.reclamoRepository.findById(imagenes.getIdReclamo());
-            if (reclamo.isPresent() && !reclamo.get().getEstado().equalsIgnoreCase("terminado")) {
-                reclamo.get().setImagenesByIdReclamo(imagenes.getImagenes());
-                imagenes.getImagenes().forEach(imagen -> {
-                    imagen.getReclamosByIdReclamo().setIdReclamo(imagenes.getIdReclamo());
-                    imagen.setDataFoto(imagen.getCastBlob().getBytes());
-                    });
-                this.reclamoRepository.save(reclamo.get());
-            }else
-                throw new ReclamoInexistenteException("No existe el reclamo");
-            }
+        if (reclamo.isPresent() && !reclamo.get().getEstado().equalsIgnoreCase("terminado")) {
+            reclamo.get().setImagenesByIdReclamo(imagenes.getImagenes());
+            imagenes.getImagenes().forEach(imagen -> {
+                imagen.getReclamosByIdReclamo().setIdReclamo(imagenes.getIdReclamo());
+                imagen.setDataFoto(imagen.getCastBlob().getBytes());
+            });
+            this.reclamoRepository.save(reclamo.get());
+        } else
+            throw new ReclamoInexistenteException("No existe el reclamo");
+    }
 
 }

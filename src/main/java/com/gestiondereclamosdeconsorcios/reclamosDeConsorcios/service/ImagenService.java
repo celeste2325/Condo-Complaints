@@ -4,5 +4,5 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Reclamo
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImagenDto;
 
 public interface ImagenService {
-   void agregarImagen(ImagenDto Imagen) throws ReclamoInexistenteException;
+    void agregarImagen(ImagenDto Imagen) throws ReclamoInexistenteException;
 }

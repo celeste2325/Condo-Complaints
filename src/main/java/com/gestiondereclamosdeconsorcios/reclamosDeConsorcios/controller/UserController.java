@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/{documento}/{contrasenia}")
     public ResponseEntity devolverUsuario(@PathVariable String documento, @PathVariable String contrasenia) {
         try {
-            return new ResponseEntity<>(this.userDetailsService.getUser(documento,contrasenia), HttpStatus.OK);
+            return new ResponseEntity<>(this.userDetailsService.getUser(documento, contrasenia), HttpStatus.OK);
         } catch (UsuarioOContraseniaIncorrecta e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
