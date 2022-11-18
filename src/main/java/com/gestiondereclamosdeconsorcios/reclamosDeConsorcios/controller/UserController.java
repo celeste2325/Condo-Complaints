@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -26,10 +27,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{documento}/{contrasenia}")
-    public ResponseEntity devolverUsuario(@PathVariable String documento, @PathVariable String contrasenia) {
+    @PostMapping("/")
+    public ResponseEntity devolverUsuario(@RequestBody Persona newPersona) {
         try {
-            return new ResponseEntity<>(this.userDetailsService.getUser(documento, contrasenia), HttpStatus.OK);
+            return new ResponseEntity<>(this.userDetailsService.getUser(newPersona), HttpStatus.OK);
         } catch (UsuarioOContraseniaIncorrecta e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

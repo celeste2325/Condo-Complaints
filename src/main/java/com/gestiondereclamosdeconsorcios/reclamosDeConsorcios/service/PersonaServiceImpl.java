@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.YaExisteUnaPersonaConMismoDniException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonaRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonaServiceImpl implements PersonaService {
@@ -40,4 +42,16 @@ public class PersonaServiceImpl implements PersonaService {
     public void delete(String documento) {
         this.personaRepository.deleteById(documento);
     }
+
+    @Override
+    public boolean existePersonaByDocumento(String documento) throws DocumentoNoEncontradoException {
+        Optional<Persona> persona = this.personaRepository.findById(documento);
+        if (persona.isPresent()) {
+            return true;
+        }else {
+            throw new DocumentoNoEncontradoException("No existe un inquilino/dueño con el documento ingresado");
+        }
+    }
+
+
 }

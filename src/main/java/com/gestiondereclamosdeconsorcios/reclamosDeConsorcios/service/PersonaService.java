@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.YaExisteUnaPersonaConMismoDniException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 
@@ -13,4 +14,6 @@ public interface PersonaService {
     Persona update(Persona newPersona, String documento);
 
     void delete(String documento);
+
+    boolean existePersonaByDocumento(String documento) throws DocumentoNoEncontradoException;
 }

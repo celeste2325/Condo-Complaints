@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,15 @@ public class PersonaRestController {
     @GetMapping("/")
     public List<Persona> getAll() {
         return this.personaService.getAll();
+    }
+
+    @GetMapping("/{documento}")
+    public ResponseEntity existPersona(@PathVariable String documento) {
+        try {
+            return new ResponseEntity<>(this.personaService.existePersonaByDocumento(documento),HttpStatus.OK);
+        }catch (DocumentoNoEncontradoException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/")

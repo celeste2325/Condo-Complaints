@@ -34,10 +34,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getUser(String documento, String contrasenia) throws UsuarioOContraseniaIncorrecta {
-        Optional<Persona> usuarioEncontrado = this.personaRepository.findById(documento);
+    public String getUser(Persona persona) throws UsuarioOContraseniaIncorrecta {
+        Optional<Persona> usuarioEncontrado = this.personaRepository.findById(persona.getDocumento());
         if (usuarioEncontrado.isPresent()) {
-            if (this.bCryptPasswordEncoder.matches(contrasenia, usuarioEncontrado.get().getContrasenia())) {
+            if (this.bCryptPasswordEncoder.matches(persona.getContrasenia(), usuarioEncontrado.get().getContrasenia())) {
                 return usuarioEncontrado.get().getRoles();
             } else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
         } else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
