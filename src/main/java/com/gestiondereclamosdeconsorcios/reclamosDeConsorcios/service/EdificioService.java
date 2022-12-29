@@ -19,6 +19,8 @@ public interface EdificioService {
     List<Inquilino> getHabitantes(Integer codigo);
 
     List<Inquilino> getHabilitados(Integer codigo);
+
+    Edificio getEdificio(Integer codigo);
 }
 
 

@@ -25,7 +25,7 @@ public class ImagenServiceImpl implements ImagenService {
             reclamo.get().setImagenesByIdReclamo(imagenes.getImagenes());
             imagenes.getImagenes().forEach(imagen -> {
                 imagen.getReclamosByIdReclamo().setIdReclamo(imagenes.getIdReclamo());
-                imagen.setDataFoto(imagen.getCastBlob().getBytes());
+                imagen.setDataFoto(imagen.getDataFoto());
             });
             this.reclamoRepository.save(reclamo.get());
         } else

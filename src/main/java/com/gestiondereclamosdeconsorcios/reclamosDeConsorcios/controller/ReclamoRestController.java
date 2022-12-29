@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reclamo")
+@CrossOrigin(origins = "*")
 public class ReclamoRestController {
     @Autowired
     ReclamoService reclamoService;

@@ -47,7 +47,7 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/**/api/persona/**/")
+                .antMatchers("/**/api/persona/**/", "/**/api/user/**/", "/**/api/duenio/**/", "/**/api/edificio/**/", "/**/api/unidad/**/", "/**/api/reclamo/**/")
                 //.antMatchers("/**/api/user/**/")
                 .permitAll()
                 .anyRequest()
@@ -68,7 +68,7 @@ public class SecurityConfig {
         authenticationManagerBuilder.eraseCredentials(false)
                 .userDetailsService(provide)
                 .passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
+        return authenticationManagerBuilder.parentAuthenticationManager(null).build();
     }
 
 

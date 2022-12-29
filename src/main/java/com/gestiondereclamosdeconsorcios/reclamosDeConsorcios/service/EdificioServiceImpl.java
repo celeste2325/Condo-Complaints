@@ -60,4 +60,9 @@ public class EdificioServiceImpl implements EdificioService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Edificio getEdificio(Integer codigo) {
+        return this.edificioRepository.findById(codigo).get();
+    }
+
 }

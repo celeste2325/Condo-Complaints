@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/edificio")
+@CrossOrigin(origins = "*")
 public class EdificioRestController {
     @Autowired
     private EdificioService edificioService;
@@ -40,6 +41,16 @@ public class EdificioRestController {
     public List<Inquilino> getHabitantesEdificio(@PathVariable Integer codigo) {
         try {
             return this.edificioService.getHabitantes(codigo);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        return null;
+    }
+    @GetMapping("/{codigoEdificio}")
+    public Edificio getEdificioByCodigo(@PathVariable Integer codigoEdificio) {
+        try {
+            return this.edificioService.getEdificio(codigoEdificio);
         } catch (Exception e) {
             e.getMessage();
         }

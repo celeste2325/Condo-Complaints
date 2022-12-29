@@ -15,5 +15,5 @@ public interface PersonaService {
 
     void delete(String documento);
 
-    boolean existePersonaByDocumento(String documento) throws DocumentoNoEncontradoException;
+    Persona existePersonaByDocumento(String documento) throws DocumentoNoEncontradoException;
 }

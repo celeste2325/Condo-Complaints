@@ -14,9 +14,8 @@ public class Imagen {
     @Column(name = "numero")
     private Integer numero;
 
-    @Lob
     @Column(name = "dataFoto")
-    private byte[] dataFoto;
+    private String dataFoto;
     @Basic
     @Column(name = "tipo")
     private String tipo;
@@ -45,11 +44,11 @@ public class Imagen {
         this.numero = numero;
     }
 
-    public byte[] getDataFoto() {
+    public String getDataFoto() {
         return dataFoto;
     }
 
-    public void setDataFoto(byte[] path) {
+    public void setDataFoto(String path) {
         this.dataFoto = path;
     }
 

@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/duenio")
+@CrossOrigin(origins = "*")
 public class DuenioRestController {
     @Autowired
     DuenioService duenioService;

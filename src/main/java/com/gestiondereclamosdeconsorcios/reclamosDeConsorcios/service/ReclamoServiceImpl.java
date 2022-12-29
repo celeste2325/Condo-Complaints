@@ -48,7 +48,7 @@ public class ReclamoServiceImpl implements ReclamoService {
                 if (esHabitanteDelEdificio) {
                     newReclamo.getImagenesByIdReclamo().forEach(
                             imagen -> {
-                                imagen.setDataFoto(imagen.getCastBlob().getBytes());
+                                imagen.setDataFoto(imagen.getDataFoto());
                             }
                     );
                     return this.reclamoRepository.save(newReclamo);

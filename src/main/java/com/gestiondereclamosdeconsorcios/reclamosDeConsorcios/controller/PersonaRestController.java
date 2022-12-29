@@ -3,6 +3,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.PersonaService;
+import com.nimbusds.jose.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/persona")
+@CrossOrigin(origins = "*")
 public class PersonaRestController {
     @Autowired
     private PersonaService personaService;

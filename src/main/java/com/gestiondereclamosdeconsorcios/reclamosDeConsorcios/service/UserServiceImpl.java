@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
         if (usuarioEncontrado.isPresent()) {
             if (this.bCryptPasswordEncoder.matches(persona.getContrasenia(), usuarioEncontrado.get().getContrasenia())) {
                 return usuarioEncontrado.get().getRoles();
-            } else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
-        } else throw new UsuarioOContraseniaIncorrecta("El documento o constraseña ingresado es incorrecto");
+            } else throw new UsuarioOContraseniaIncorrecta("Documento o constraseña incorrecto");
+        } else throw new UsuarioOContraseniaIncorrecta("Documento o constraseña incorrecto");
     }
 
 }
