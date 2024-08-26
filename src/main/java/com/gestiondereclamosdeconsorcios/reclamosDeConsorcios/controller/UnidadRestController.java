@@ -1,7 +1,5 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnidadService;

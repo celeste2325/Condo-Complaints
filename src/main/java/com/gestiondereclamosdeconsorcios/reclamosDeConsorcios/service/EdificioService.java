@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 
@@ -21,6 +22,8 @@ public interface EdificioService {
     List<Inquilino> getHabilitados(Integer codigo);
 
     Edificio getEdificio(Integer codigo);
+
+    List<BuildingWithUnitsByTenant> getBuildingByTenant(String tenantDocumentID);
 }
 
 

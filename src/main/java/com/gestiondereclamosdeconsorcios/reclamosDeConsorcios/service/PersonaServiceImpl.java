@@ -48,7 +48,7 @@ public class PersonaServiceImpl implements PersonaService {
         Optional<Persona> persona = this.personaRepository.findById(documento);
         if (persona.isPresent()) {
             return persona.get();
-        }else {
+        } else {
             throw new DocumentoNoEncontradoException("El documento debe pertenecer a un dueño/inquilino del consorcio");
         }
     }

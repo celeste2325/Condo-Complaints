@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.EdificioService;
@@ -47,6 +48,7 @@ public class EdificioRestController {
 
         return null;
     }
+
     @GetMapping("/{codigoEdificio}")
     public Edificio getEdificioByCodigo(@PathVariable Integer codigoEdificio) {
         try {
@@ -74,5 +76,9 @@ public class EdificioRestController {
         return new ResponseEntity<>(edificioService.update(newEdificio, id), HttpStatus.OK);
     }
 
+    @GetMapping("/getBuildingWithUnits/{tenantDocumentID}")
+    public List<BuildingWithUnitsByTenant> getBuildingByTenant(@PathVariable String tenantDocumentID) {
+        return this.edificioService.getBuildingByTenant(tenantDocumentID);
+    }
 
 }

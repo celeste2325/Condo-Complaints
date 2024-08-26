@@ -6,7 +6,6 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Documen
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoSeEncontraronDueniosException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioImpresionDto;
 

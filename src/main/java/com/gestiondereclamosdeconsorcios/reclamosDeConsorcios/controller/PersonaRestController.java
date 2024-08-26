@@ -3,7 +3,6 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.PersonaService;
-import com.nimbusds.jose.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,8 @@ public class PersonaRestController {
     @GetMapping("/{documento}")
     public ResponseEntity existPersona(@PathVariable String documento) {
         try {
-            return new ResponseEntity<>(this.personaService.existePersonaByDocumento(documento),HttpStatus.OK);
-        }catch (DocumentoNoEncontradoException e){
+            return new ResponseEntity<>(this.personaService.existePersonaByDocumento(documento), HttpStatus.OK);
+        } catch (DocumentoNoEncontradoException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

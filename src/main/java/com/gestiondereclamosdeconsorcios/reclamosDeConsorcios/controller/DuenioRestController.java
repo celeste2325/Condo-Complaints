@@ -1,8 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoSeEncontraronDueniosException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioImpresionDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.DuenioService;
@@ -61,10 +59,10 @@ public class DuenioRestController {
         try {
             duenioService.update(documentoNvo, id, documentoDuenioAntiguo);
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
-        }
+    }
 
 
     @DeleteMapping("/{id}")
