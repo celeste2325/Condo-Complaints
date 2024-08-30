@@ -48,7 +48,9 @@ public class ReclamoServiceImpl implements ReclamoService {
                 if (esHabitanteDelEdificio) {
                     newReclamo.getImagenesByIdReclamo().forEach(
                             imagen -> {
+                                //TODO FORMATEAR NOMBRE DE FOTO CON LA RUTA. IDRECLAMO/FOTONOMBRE.TYPE
                                 imagen.setDataFoto(imagen.getDataFoto());
+                                imagen.setTipo(imagen.getTipo());
                             }
                     );
                     return this.reclamoRepository.save(newReclamo);
