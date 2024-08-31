@@ -1,6 +1,5 @@
-package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
+package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnitDto;
 import lombok.Getter;
 import lombok.Setter;
 

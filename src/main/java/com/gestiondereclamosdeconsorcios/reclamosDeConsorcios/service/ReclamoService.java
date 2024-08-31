@@ -5,6 +5,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoEstaH
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByTenant;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface ReclamoService {
 
     List<Reclamo> getReclamos(Integer codigoEdificio, Integer codigoUnidad, Integer idReclamo) throws SinReclamosCargadosException;
 
+    List<ComplaintsByTenant> getComplaintsByTenant(String tenantDocument);
 }

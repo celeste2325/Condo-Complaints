@@ -6,6 +6,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinRecl
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,4 +89,24 @@ public class ReclamoServiceImpl implements ReclamoService {
 
     }
 
+    @Override
+    public List<ComplaintsByTenant> getComplaintsByTenant(String tenantDocument) {
+        List<Object[]> results = this.reclamoRepository.getComplaintsByTenant(tenantDocument);
+        List<ComplaintsByTenant> complaints = new ArrayList<>();
+
+        //// Transforms the received data into the BuildingWithUnitsByTenant DTO.
+        for (Object[] row : results) {
+            ComplaintsByTenant complaintsByTenant = new ComplaintsByTenant(
+                    (Integer) row[0],     // complaintID
+                    (String) row[1],     // buildingName
+                    (String) row[2],     // locationIssue
+                    (String) row[3],     // description
+                    (Integer) row[4],    // unit
+                    (String) row[5],     // status
+                    (String) row[6]     // image
+            );
+            complaints.add(complaintsByTenant);
+        }
+        return complaints;
+    }
 }

@@ -1,8 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
 
 import java.util.List;
 

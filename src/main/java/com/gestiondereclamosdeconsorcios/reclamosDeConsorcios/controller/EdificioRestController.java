@@ -1,8 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.EdificioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

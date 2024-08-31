@@ -11,4 +11,11 @@ public interface ReclamoRepository extends JpaRepository<Reclamo, Integer> {
     List<Reclamo> getByEstado(String estado);
 
     List<Reclamo> findAllByCodigoEdificioOrIdentificadorOrIdReclamo(Integer codigoEdificio, Integer codigoUnidad, Integer idReclamo);
+
+    @Query(value = "select r.idReclamo complaintID, e.nombre as buildingName, r.ubicacion as locationIssue,\n" +
+            "    r.descripcion as description, identificador as unit,\n" +
+            "    r.estado as status, i.dataFoto as image\n" +
+            "    from reclamos r inner join dbo.imagenes i on r.idReclamo = i.idReclamo\n" +
+            "    inner join dbo.edificios e on e.codigo = r.codigo where r.documento = ?1", nativeQuery = true)
+    List<Object[]> getComplaintsByTenant(String tenantDocument);
 }
