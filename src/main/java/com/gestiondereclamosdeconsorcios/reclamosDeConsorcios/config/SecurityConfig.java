@@ -47,7 +47,7 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/**/api/persona/**/", "/**/api/user/**/", "/**/api/duenio/**/", "/**/api/edificio/**/", "/**/api/unidad/**/", "/**/api/reclamo/**/")
+                .antMatchers("/**/api/persona/**/", "/**/api/user/**/", "/**/api/duenio/**/", "/**/api/edificio/**/", "/**/api/unidad/**/", "/**/api/reclamo/**/", "/**/api/file/**/")
                 //.antMatchers("/**/api/user/**/")
                 .permitAll()
                 .anyRequest()
