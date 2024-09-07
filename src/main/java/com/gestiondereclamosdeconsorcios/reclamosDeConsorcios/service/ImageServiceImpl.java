@@ -1,6 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ReclamoInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Imagen;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImagenDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ImagenServiceImpl implements ImagenService {
+public class ImageServiceImpl implements ImageService {
     @Autowired
     ImagenRepository imagenRepository;
 
@@ -25,11 +26,16 @@ public class ImagenServiceImpl implements ImagenService {
             reclamo.get().setImagenesByIdReclamo(imagenes.getImagenes());
             imagenes.getImagenes().forEach(imagen -> {
                 imagen.getReclamosByIdReclamo().setIdReclamo(imagenes.getIdReclamo());
-                imagen.setDataFoto(imagen.getDataFoto());
+                imagen.setDataFoto("assets//" + imagen.getDataFoto());
             });
             this.reclamoRepository.save(reclamo.get());
         } else
             throw new ReclamoInexistenteException("No existe el reclamo");
+    }
+
+    @Override
+    public Imagen getImageByComplaintID(String complaintID) {
+        return this.imagenRepository.getImageByComplaintID(Integer.parseInt(complaintID));
     }
 
 }

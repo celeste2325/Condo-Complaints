@@ -6,7 +6,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.Buildin
 
 import java.util.List;
 
-public interface EdificioService {
+public interface BuildingService {
     List<Edificio> getEdificioByName(String name);
 
     List<Edificio> getAll();

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UnidadServiceImpl implements UnidadService {
+public class UnitServiceImpl implements UnitService {
     @Autowired
     private UnidadRepository unidadRepository;
     @Autowired
@@ -24,7 +24,7 @@ public class UnidadServiceImpl implements UnidadService {
     @Autowired
     private DuenioRepository dueniosRepository;
 
-    public UnidadServiceImpl(UnidadRepository unidadRepository) {
+    public UnitServiceImpl(UnidadRepository unidadRepository) {
         this.unidadRepository = unidadRepository;
     }
 

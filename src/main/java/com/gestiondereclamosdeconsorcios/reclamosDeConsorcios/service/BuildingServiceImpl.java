@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class EdificioServiceImpl implements EdificioService {
+public class BuildingServiceImpl implements BuildingService {
     @Autowired
     private EdificioRepository edificioRepository;
 

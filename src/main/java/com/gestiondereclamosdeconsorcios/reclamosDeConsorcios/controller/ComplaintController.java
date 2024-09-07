@@ -2,8 +2,8 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByTenant;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ReclamoService;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reclamo")
+@RequestMapping("/api/complaint")
 @CrossOrigin(origins = "*")
-public class ReclamoRestController {
+public class ComplaintController {
     @Autowired
-    ReclamoService reclamoService;
+    ComplaintService reclamoService;
 
     @PostMapping("/")
     public ResponseEntity createNewReclamo(@RequestBody Reclamo newReclamo) {
@@ -46,9 +46,9 @@ public class ReclamoRestController {
         }
     }
 
-    @GetMapping("/getReclamosByTenant/{tenantDocument}")
-    public ResponseEntity<List<ComplaintsByTenant>> getComplaintsByTenant(@PathVariable String tenantDocument) {
-        return new ResponseEntity<>(this.reclamoService.getComplaintsByTenant(tenantDocument), HttpStatus.OK);
+    @GetMapping("/getComplaintsByTenantOrAdmin")
+    public ResponseEntity<List<ComplaintsByDocumentID>> getComplaints(@RequestParam(required = false) String tenantDocument) {
+        return new ResponseEntity<>(this.reclamoService.getComplaints(tenantDocument), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

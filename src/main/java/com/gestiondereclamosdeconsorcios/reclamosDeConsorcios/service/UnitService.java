@@ -8,7 +8,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadD
 
 import java.util.List;
 
-public interface UnidadService {
+public interface UnitService {
     Integer saveUnidad(UnidadDto unidad) throws EdificioNoEncontradoException, LaUnidadYaFueCreada;
 
     void remove(Integer id);

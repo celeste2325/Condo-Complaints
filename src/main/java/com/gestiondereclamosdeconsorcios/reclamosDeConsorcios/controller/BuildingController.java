@@ -3,7 +3,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.EdificioService;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/edificio")
+@RequestMapping("/api/building")
 @CrossOrigin(origins = "*")
-public class EdificioRestController {
+public class BuildingController {
     @Autowired
-    private EdificioService edificioService;
+    private BuildingService edificioService;
 
     @PostMapping("/")
     public ResponseEntity crearEdificio(@RequestBody Edificio newEdificio) {

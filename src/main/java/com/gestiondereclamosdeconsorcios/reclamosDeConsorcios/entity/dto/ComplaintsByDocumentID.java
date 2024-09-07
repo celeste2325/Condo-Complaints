@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ComplaintsByTenant {
+public class ComplaintsByDocumentID {
     private int complaintID;
     private String buildingName;
     private String locationIssue;
@@ -14,7 +14,7 @@ public class ComplaintsByTenant {
     private String status;
     private String image;
 
-    public ComplaintsByTenant(int complaintID, String buildingName, String locationIssue, String description, int unit, String status, String image) {
+    public ComplaintsByDocumentID(int complaintID, String buildingName, String locationIssue, String description, int unit, String status, String image) {
         this.complaintID = complaintID;
         this.buildingName = buildingName;
         this.locationIssue = locationIssue;

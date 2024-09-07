@@ -6,7 +6,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinRecl
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByTenant;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ReclamoServiceImpl implements ReclamoService {
+public class ComplaintServiceImpl implements ComplaintService {
 
     @Autowired
     ReclamoRepository reclamoRepository;
@@ -37,7 +37,7 @@ public class ReclamoServiceImpl implements ReclamoService {
     public Reclamo createReclamo(Reclamo newReclamo) throws EdificioNoEncontradoException, UnidadInexistenteException, NoEstaHabilitadoParaRealizarUnReclamo {
         boolean existEdificio = this.edificioRepository.existsById(newReclamo.getCodigoEdificio());
         boolean unidadCorrespondeAlEdificio = this.unidadRepository.existsByIdentificadorAndCodigoEdificio(newReclamo.getIdentificador(), newReclamo.getCodigoEdificio());
-
+        Reclamo complaintCreated;
         if (existEdificio) {
             if (unidadCorrespondeAlEdificio) {
                 List<Object[]> habilitados = this.edificioRepository.getHabilitados(newReclamo.getCodigoEdificio());
@@ -48,18 +48,19 @@ public class ReclamoServiceImpl implements ReclamoService {
 
                 boolean esHabitanteDelEdificio = habilitadosConv.stream().filter(inquilino -> inquilino.getDocumento().equals(newReclamo.getPersonasByDocumento().getDocumento())).count() > 0;
                 if (esHabitanteDelEdificio) {
+                    complaintCreated = this.reclamoRepository.save(newReclamo);
                     newReclamo.getImagenesByIdReclamo().forEach(
                             imagen -> {
-                                //TODO FORMATEAR NOMBRE DE FOTO CON LA RUTA. IDRECLAMO/FOTONOMBRE.TYPE
-                                imagen.setDataFoto(imagen.getDataFoto());
+                                imagen.setDataFoto("assets//" + complaintCreated.getIdReclamo() + "//" + imagen.getDataFoto());
                                 imagen.setTipo(imagen.getTipo());
                             }
                     );
-                    return this.reclamoRepository.save(newReclamo);
+
                 } else
                     throw new NoEstaHabilitadoParaRealizarUnReclamo("El documento ingresado no pertenece a un dueño/inquilino del edificio");
             } else throw new UnidadInexistenteException("La unidad no existe en el edificio");
         } else throw new EdificioNoEncontradoException("El edificio no existe");
+        return complaintCreated;
     }
 
     @Override
@@ -90,13 +91,13 @@ public class ReclamoServiceImpl implements ReclamoService {
     }
 
     @Override
-    public List<ComplaintsByTenant> getComplaintsByTenant(String tenantDocument) {
-        List<Object[]> results = this.reclamoRepository.getComplaintsByTenant(tenantDocument);
-        List<ComplaintsByTenant> complaints = new ArrayList<>();
+    public List<ComplaintsByDocumentID> getComplaints(String documentID) {
+        List<Object[]> results = this.reclamoRepository.getComplaintsByTenantOrAdmin(documentID);
+        List<ComplaintsByDocumentID> complaints = new ArrayList<>();
 
         //// Transforms the received data into the BuildingWithUnitsByTenant DTO.
         for (Object[] row : results) {
-            ComplaintsByTenant complaintsByTenant = new ComplaintsByTenant(
+            ComplaintsByDocumentID complaintsByTenant = new ComplaintsByDocumentID(
                     (Integer) row[0],     // complaintID
                     (String) row[1],     // buildingName
                     (String) row[2],     // locationIssue
@@ -108,5 +109,9 @@ public class ReclamoServiceImpl implements ReclamoService {
             complaints.add(complaintsByTenant);
         }
         return complaints;
+    }
+
+    public Reclamo getByID(String complaintID) {
+        return this.reclamoRepository.getByIdReclamo(Integer.parseInt(complaintID));
     }
 }

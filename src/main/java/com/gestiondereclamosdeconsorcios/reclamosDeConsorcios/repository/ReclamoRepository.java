@@ -16,6 +16,8 @@ public interface ReclamoRepository extends JpaRepository<Reclamo, Integer> {
             "    r.descripcion as description, identificador as unit,\n" +
             "    r.estado as status, i.dataFoto as image\n" +
             "    from reclamos r inner join dbo.imagenes i on r.idReclamo = i.idReclamo\n" +
-            "    inner join dbo.edificios e on e.codigo = r.codigo where r.documento = ?1", nativeQuery = true)
-    List<Object[]> getComplaintsByTenant(String tenantDocument);
+            "    inner join dbo.edificios e on e.codigo = r.codigo where (?1 IS NULL OR r.documento = ?1)", nativeQuery = true)
+    List<Object[]> getComplaintsByTenantOrAdmin(String documentID);
+
+    Reclamo getByIdReclamo(int complaintID);
 }

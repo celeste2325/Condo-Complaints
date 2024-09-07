@@ -2,7 +2,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnidadService;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/unidad")
+@RequestMapping("/api/unit")
 @CrossOrigin(origins = "*")
-public class UnidadRestController {
+public class UnitController {
     @Autowired
-    UnidadService unidadService;
+    UnitService unidadService;
 
     @GetMapping("/")
     public List<Unidad> getUnidades() {
@@ -23,10 +23,10 @@ public class UnidadRestController {
         return unidades;
     }
 
-    @GetMapping("/getUnidad/{identificador}")
-    public ResponseEntity getUnidadesID(@PathVariable Integer identificador) {
+    @GetMapping("/getUnit/{unitID}")
+    public ResponseEntity getUnitByUnitID(@PathVariable Integer unitID) {
         try {
-            return new ResponseEntity<>(unidadService.getID(identificador), HttpStatus.OK);
+            return new ResponseEntity<>(unidadService.getID(unitID), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
