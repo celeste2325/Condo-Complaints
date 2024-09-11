@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/persona")
+@RequestMapping("/api/person")
 @CrossOrigin(origins = "*")
 public class PersonaRestController {
     @Autowired
@@ -22,10 +22,10 @@ public class PersonaRestController {
         return this.personaService.getAll();
     }
 
-    @GetMapping("/{documento}")
-    public ResponseEntity existPersona(@PathVariable String documento) {
+    @GetMapping("/{documentID}")
+    public ResponseEntity existPersona(@PathVariable String documentID) {
         try {
-            return new ResponseEntity<>(this.personaService.existePersonaByDocumento(documento), HttpStatus.OK);
+            return new ResponseEntity<>(this.personaService.getPersonByDocumentID(documentID), HttpStatus.OK);
         } catch (DocumentoNoEncontradoException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

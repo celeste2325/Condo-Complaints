@@ -7,6 +7,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadI
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
@@ -69,10 +70,10 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public Reclamo updateEstado(Reclamo newReclamo, Integer id) {
-        return this.reclamoRepository.findById(id).map(reclamo -> {
-            reclamo.setEstado(newReclamo.getEstado());
-            return this.reclamoRepository.save(reclamo);
+    public Reclamo updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest) {
+        return this.reclamoRepository.findById(Integer.parseInt(updateComplaintStatusRequest.getComplaintID())).map(complaint -> {
+            complaint.setEstado(updateComplaintStatusRequest.getNewStatus());
+            return this.reclamoRepository.save(complaint);
         }).get();
     }
 

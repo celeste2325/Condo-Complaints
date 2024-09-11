@@ -15,5 +15,5 @@ public interface PersonaService {
 
     void delete(String documento);
 
-    Persona existePersonaByDocumento(String documento) throws DocumentoNoEncontradoException;
+    Persona getPersonByDocumentID(String documentID) throws DocumentoNoEncontradoException;
 }

@@ -3,6 +3,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,9 +52,9 @@ public class ComplaintController {
         return new ResponseEntity<>(this.reclamoService.getComplaints(tenantDocument), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity updateEstadoReclamo(@RequestBody Reclamo reclamo, @PathVariable Integer id) {
-        return new ResponseEntity(this.reclamoService.updateEstado(reclamo, id), HttpStatus.OK);
+    @PutMapping("/updateComplaintStatus")
+    public ResponseEntity updateComplaintStatus(@RequestBody UpdateComplaintStatusRequest updateComplaintStatusRequest) {
+        return new ResponseEntity(this.reclamoService.updateComplaintStatus(updateComplaintStatusRequest), HttpStatus.OK);
     }
 
 

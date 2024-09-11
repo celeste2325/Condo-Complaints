@@ -44,12 +44,12 @@ public class PersonaServiceImpl implements PersonaService {
     }
 
     @Override
-    public Persona existePersonaByDocumento(String documento) throws DocumentoNoEncontradoException {
-        Optional<Persona> persona = this.personaRepository.findById(documento);
+    public Persona getPersonByDocumentID(String documentID) throws DocumentoNoEncontradoException {
+        Optional<Persona> persona = this.personaRepository.findById(documentID);
         if (persona.isPresent()) {
             return persona.get();
         } else {
-            throw new DocumentoNoEncontradoException("El documento debe pertenecer a un dueño/inquilino del consorcio");
+            throw new DocumentoNoEncontradoException("The document ID must belong to a condo owner/tenant");
         }
     }
 

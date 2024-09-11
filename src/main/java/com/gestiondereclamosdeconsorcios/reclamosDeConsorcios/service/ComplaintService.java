@@ -6,6 +6,7 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinRecl
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface ComplaintService {
 
     List<Reclamo> getAll();
 
-    Reclamo updateEstado(Reclamo reclamo, Integer id);
+    Reclamo updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest);
 
     List<Reclamo> getAllByEstado(String estado);
 
