@@ -1,10 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Building;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnitDto;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,46 +17,41 @@ import java.util.stream.Collectors;
 @Service
 public class BuildingServiceImpl implements BuildingService {
     @Autowired
-    private EdificioRepository edificioRepository;
+    private BuildingRepository buildingRepository;
 
     @Override
     @Transactional
-    public void saveEdificio(Edificio edificio) {
-        edificioRepository.save(edificio);
+    public void createBuilding(Building building) {
+        buildingRepository.save(building);
     }
 
     @Override
-    public List<Edificio> getEdificioByName(String name) {
-        return null;
+    public List<Building> getAll() {
+        return buildingRepository.findAll();
     }
 
     @Override
-    public List<Edificio> getAll() {
-        return edificioRepository.findAll();
+    public void remove(Integer buildingID) {
+        buildingRepository.deleteById(buildingID);
     }
 
     @Override
-    public void remove(Integer id) {
-        edificioRepository.deleteById(id);
-    }
-
-    @Override
-    public Edificio update(Edificio newEdificio, Integer id) {
-        return edificioRepository.findById(id).map(edificio -> {
-            edificio.setDireccion(newEdificio.getDireccion());
-            edificio.setNombre(newEdificio.getNombre());
-            return edificioRepository.save(edificio);
+    public Building update(Building newBuilding, Integer buildingID) {
+        return buildingRepository.findById(buildingID).map(edificio -> {
+            edificio.setAddress(newBuilding.getAddress());
+            edificio.setName(newBuilding.getName());
+            return buildingRepository.save(edificio);
         }).get();
     }
 
     @Override
-    public List<Inquilino> getHabitantes(Integer codigo) {
-        return this.edificioRepository.getHabitantes(codigo);
+    public List<Inquilino> getHabitantes(Integer buildingID) {
+        return this.buildingRepository.getHabitantes(buildingID);
     }
 
     @Override
     public List<Inquilino> getHabilitados(Integer codigo) {
-        List<Object[]> habilitados = this.edificioRepository.getHabilitados(codigo);
+        List<Object[]> habilitados = this.buildingRepository.getHabilitados(codigo);
         return habilitados
                 .stream()
                 .map(habilitado -> new Inquilino(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
@@ -64,13 +59,13 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public Edificio getEdificio(Integer codigo) {
-        return this.edificioRepository.findById(codigo).get();
+    public Building getBuilding(Integer buildingID) {
+        return this.buildingRepository.findByBuildingID(buildingID);
     }
 
     @Override
     public List<BuildingWithUnitsByTenant> getBuildingByTenant(String tenantDocumentID) {
-        List<Object[]> results = this.edificioRepository.getBuildingByTenant(tenantDocumentID);
+        List<Object[]> results = this.buildingRepository.getBuildingByTenant(tenantDocumentID);
         List<BuildingWithUnitsByTenant> buildings = new ArrayList<>();
 
         //// Transforms the received data into the BuildingWithUnitsByTenant DTO.

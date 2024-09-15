@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Imagen;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Image;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ImagenDto {
-    List<Imagen> imagenes;
+    List<Image> imagenes;
     private Integer idReclamo;
 
     public ImagenDto() {

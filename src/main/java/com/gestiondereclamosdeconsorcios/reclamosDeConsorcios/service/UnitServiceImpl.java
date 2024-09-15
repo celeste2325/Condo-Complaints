@@ -1,13 +1,13 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.EdificioNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.LaUnidadYaFueCreada;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.DuenioRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,54 +17,54 @@ import java.util.Optional;
 @Service
 public class UnitServiceImpl implements UnitService {
     @Autowired
-    private UnidadRepository unidadRepository;
+    private UnitRepository unitRepository;
     @Autowired
-    private EdificioRepository edificioRepository;
+    private BuildingRepository buildingRepository;
 
     @Autowired
     private DuenioRepository dueniosRepository;
 
-    public UnitServiceImpl(UnidadRepository unidadRepository) {
-        this.unidadRepository = unidadRepository;
+    public UnitServiceImpl(UnitRepository unitRepository) {
+        this.unitRepository = unitRepository;
     }
 
     @Override
-    public Integer saveUnidad(UnidadDto unidad) throws EdificioNoEncontradoException, LaUnidadYaFueCreada {
-        if (this.edificioRepository.existsById(unidad.getCodigoEdificio())) {
-            if (!this.unidadRepository.existsByPisoAndNumeroAndCodigoEdificio(unidad.getPiso(), unidad.getNumero(), unidad.getCodigoEdificio())) {
-                return this.unidadRepository.saveUnidad(unidad.getPiso(), unidad.getNumero(), unidad.getCodigoEdificio());
+    public Integer saveUnit(UnidadDto unit) throws BuildingNotFoundException, LaUnidadYaFueCreada {
+        if (this.buildingRepository.existsById(unit.getCodigoEdificio())) {
+            if (!this.unitRepository.existsByFloorAndNumberAndBuildingID(unit.getPiso(), unit.getNumero(), unit.getCodigoEdificio())) {
+                return this.unitRepository.saveUnit(unit.getPiso(), unit.getNumero(), unit.getCodigoEdificio());
             } else throw new LaUnidadYaFueCreada("La unidad que intenta crear ya existe en el edificio");
 
         } else
-            throw new EdificioNoEncontradoException("El código del edificio ingresado no corresponde a un edificio del consorcio");
+            throw new BuildingNotFoundException("El código del edificio ingresado no corresponde a un edificio del consorcio");
     }
 
     @Override
     public void remove(Integer id) {
-        unidadRepository.deleteById(id);
+        unitRepository.deleteById(id);
     }
 
     @Override
-    public Unidad update(Unidad newUnidad, Integer id) {
-        return unidadRepository.findById(id).map(unidad -> {
-            unidad.setPiso(newUnidad.getPiso());
-            unidad.setNumero(newUnidad.getNumero());
-            unidad.setHabitado(newUnidad.getHabitado());
-            return unidadRepository.save(unidad);
+    public Unit update(Unit newUnit, Integer unitID) {
+        return unitRepository.findById(unitID).map(unidad -> {
+            unidad.setFloor(newUnit.getFloor());
+            unidad.setNumber(newUnit.getNumber());
+            unidad.setHabitado(newUnit.getHabitado());
+            return unitRepository.save(unidad);
         }).get();
     }
 
     @Override
-    public List<Unidad> getAll() {
-        return unidadRepository.findAll();
+    public List<Unit> getAll() {
+        return unitRepository.findAll();
     }
 
     @Override
-    public Unidad getID(Integer identificador) throws UnidadInexistenteException {
-        Optional<Unidad> unidad = this.unidadRepository.findById(identificador);
+    public Unit getID(Integer unitID) throws UnitNotFoundException {
+        Optional<Unit> unidad = this.unitRepository.findById(unitID);
         if (unidad.isPresent()) {
             return unidad.get();
-        } else throw new UnidadInexistenteException("El id ingresado no corresponde a una unidad existente");
+        } else throw new UnitNotFoundException("El id ingresado no corresponde a una unidad existente");
     }
 
 }

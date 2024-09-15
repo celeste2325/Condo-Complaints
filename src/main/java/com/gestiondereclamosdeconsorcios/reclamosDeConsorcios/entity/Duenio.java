@@ -1,10 +1,14 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "duenios", schema = "dbo", catalog = "gestion_reclamo_consorcio")
 public class Duenio {
@@ -14,72 +18,32 @@ public class Duenio {
     @Column(name = "id")
     private Integer id;
     @Basic
-    @Column(name = "identificador", updatable = false, insertable = false)
-    private Integer identificador;
+    @Column(name = "unitID", updatable = false, insertable = false)
+    private Integer unitID;
 
     @Basic
-    @Column(name = "documento", updatable = false, insertable = false)
-    private String documento;
+    @Column(name = "document", updatable = false, insertable = false)
+    private String document;
 
     @ManyToOne
-    @JoinColumn(name = "identificador", referencedColumnName = "identificador")
-    @JsonBackReference(value = "unidad-duenio")
-    private Unidad identificadorDuenio;
+    @JoinColumn(name = "unitID", referencedColumnName = "unitID")
+    @JsonBackReference(value = "unit-duenio")
+    private Unit unitIDduenio;
 
     @ManyToOne
-    @JoinColumn(name = "documento", referencedColumnName = "documento")
-    @JsonBackReference(value = "persona-duenio")
-    private Persona persona;
-
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona personaByDocumento) {
-        this.persona = personaByDocumento;
-    }
-
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getIdentificador() {
-        return identificador;
-    }
-
-    public void setIdentificador(Integer identificador) {
-        this.identificador = identificador;
-    }
-
-    public Unidad getIdentificadorDuenio() {
-        return identificadorDuenio;
-    }
-
-    public void setIdentificadorDuenio(Unidad identificadorDuenio) {
-        this.identificadorDuenio = identificadorDuenio;
-    }
+    @JoinColumn(name = "document", referencedColumnName = "document")
+    @JsonBackReference(value = "person-duenio")
+    private Person person;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Duenio duenio)) return false;
-        return Objects.equals(getId(), duenio.getId()) && Objects.equals(getIdentificador(), duenio.getIdentificador()) && Objects.equals(getDocumento(), duenio.getDocumento()) && Objects.equals(getIdentificadorDuenio(), duenio.getIdentificadorDuenio()) && Objects.equals(getPersona(), duenio.getPersona());
+        return Objects.equals(getId(), duenio.getId()) && Objects.equals(getUnitID(), duenio.getUnitID()) && Objects.equals(getDocument(), duenio.getDocument()) && Objects.equals(getUnitIDduenio(), duenio.getUnitIDduenio()) && Objects.equals(getPerson(), duenio.getPerson());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getIdentificador(), getDocumento(), getIdentificadorDuenio(), getPersona());
+        return Objects.hash(getId(), getUnitID(), getDocument(), getUnitIDduenio(), getPerson());
     }
 }

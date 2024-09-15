@@ -2,7 +2,7 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.InquilinoImpresionDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.InquilinoService;
@@ -59,7 +59,7 @@ public class InquilinoRestController {
     }
 
     @DeleteMapping("/{identificadorUnidad}/{codigoEdificio}")
-    public ResponseEntity liberarUnidad(@PathVariable Integer identificadorUnidad, @PathVariable Integer codigoEdificio) throws UnidadInexistenteException {
+    public ResponseEntity liberarUnidad(@PathVariable Integer identificadorUnidad, @PathVariable Integer codigoEdificio) throws UnitNotFoundException {
         try {
             this.inquilinoService.liberarUnidad(identificadorUnidad, codigoEdificio);
             return new ResponseEntity<>(HttpStatus.OK);

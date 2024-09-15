@@ -1,8 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.PersonaService;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,42 +13,42 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/person")
 @CrossOrigin(origins = "*")
-public class PersonaRestController {
+public class PersonRestController {
     @Autowired
-    private PersonaService personaService;
+    private PersonService personService;
 
     @GetMapping("/")
-    public List<Persona> getAll() {
-        return this.personaService.getAll();
+    public List<Person> getAll() {
+        return this.personService.getAll();
     }
 
     @GetMapping("/{documentID}")
-    public ResponseEntity existPersona(@PathVariable String documentID) {
+    public ResponseEntity personByDocument(@PathVariable String documentID) {
         try {
-            return new ResponseEntity<>(this.personaService.getPersonByDocumentID(documentID), HttpStatus.OK);
+            return new ResponseEntity<>(this.personService.getPersonByDocument(documentID), HttpStatus.OK);
         } catch (DocumentoNoEncontradoException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/")
-    public ResponseEntity savePersona(@RequestBody Persona newPersona) {
+    public ResponseEntity savePerson(@RequestBody Person newPerson) {
         try {
-            this.personaService.save(newPersona);
+            this.personService.save(newPerson);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/{documento}")
-    public ResponseEntity<Void> removePersona(@PathVariable String documento) {
-        this.personaService.delete(documento);
+    @DeleteMapping("/{documentID}")
+    public ResponseEntity<Void> removePerson(@PathVariable String documentID) {
+        this.personService.delete(documentID);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{documento}")
-    public ResponseEntity<Persona> updatePersona(@RequestBody Persona persona, @PathVariable String documento) {
-        return new ResponseEntity<>(this.personaService.update(persona, documento), HttpStatus.OK);
+    @PutMapping("/{document}")
+    public ResponseEntity<Person> updatePerson(@RequestBody Person persona, @PathVariable String document) {
+        return new ResponseEntity<>(this.personService.update(persona, document), HttpStatus.OK);
     }
 }

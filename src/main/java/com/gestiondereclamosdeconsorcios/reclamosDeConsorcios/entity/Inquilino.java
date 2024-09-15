@@ -1,10 +1,14 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "inquilinos", schema = "dbo", catalog = "gestion_reclamo_consorcio")
 public class Inquilino {
@@ -16,81 +20,41 @@ public class Inquilino {
     private Integer id;
 
     @Basic
-    @Column(name = "documento", updatable = false, insertable = false)
-    private String documento;
+    @Column(name = "document", updatable = false, insertable = false)
+    private String document;
 
     @Basic
-    @Column(name = "identificador", updatable = false, insertable = false)
-    private Integer identificador;
+    @Column(name = "unitID", updatable = false, insertable = false)
+    private Integer unitID;
 
     @ManyToOne
-    @JoinColumn(name = "identificador", referencedColumnName = "identificador")
-    @JsonBackReference(value = "unidad-inquilino")
-    private Unidad identificadorInquilino;
+    @JoinColumn(name = "unitID", referencedColumnName = "unitID")
+    @JsonBackReference(value = "unit-inquilino")
+    private Unit unitIDInquilino;
 
     @ManyToOne
-    @JoinColumn(name = "documento", referencedColumnName = "documento")
-    @JsonBackReference(value = "persona-inquilino")
-    private Persona persona;
+    @JoinColumn(name = "document", referencedColumnName = "document")
+    @JsonBackReference(value = "person-inquilino")
+    private Person person;
 
-    public Inquilino(Integer id, Integer identificador, String documento) {
+    public Inquilino(Integer id, Integer unitID, String document) {
         this.id = id;
-        this.identificador = identificador;
-        this.documento = documento;
+        this.unitID = unitID;
+        this.document = document;
     }
 
     public Inquilino() {
-    }
-
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
-        this.documento = documento;
-    }
-
-    public Persona getPersona() {
-        return persona;
-    }
-
-    public void setPersona(Persona persona) {
-        this.persona = persona;
-    }
-
-    public Integer getIdentificador() {
-        return identificador;
-    }
-
-    public void setIdentificador(Integer identificador) {
-        this.identificador = identificador;
-    }
-
-    public Unidad getIdentificadorInquilino() {
-        return identificadorInquilino;
-    }
-
-    public void setIdentificadorInquilino(Unidad unidadByIdentificador_inquilino) {
-        this.identificadorInquilino = unidadByIdentificador_inquilino;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Inquilino inquilino)) return false;
-        return Objects.equals(getId(), inquilino.getId()) && Objects.equals(getDocumento(), inquilino.getDocumento()) && Objects.equals(getIdentificador(), inquilino.getIdentificador()) && Objects.equals(getIdentificadorInquilino(), inquilino.getIdentificadorInquilino());
+        return Objects.equals(getId(), inquilino.getId()) && Objects.equals(getDocument(), inquilino.getDocument()) && Objects.equals(getUnitID(), inquilino.getUnitID()) && Objects.equals(getUnitIDInquilino(), inquilino.getUnitIDInquilino());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDocumento(), getIdentificador(), getIdentificadorInquilino());
+        return Objects.hash(getId(), getDocument(), getUnitID(), getUnitIDInquilino());
     }
 }

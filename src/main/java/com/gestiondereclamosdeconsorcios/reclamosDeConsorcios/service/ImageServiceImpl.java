@@ -1,11 +1,11 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ReclamoInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Imagen;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Image;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImagenDto;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ComplaintRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +14,28 @@ import java.util.Optional;
 @Service
 public class ImageServiceImpl implements ImageService {
     @Autowired
-    ImagenRepository imagenRepository;
+    ImageRepository imageRepository;
 
     @Autowired
-    ReclamoRepository reclamoRepository;
+    ComplaintRepository complaintRepository;
 
     @Override
-    public void agregarImagen(ImagenDto imagenes) throws ReclamoInexistenteException {
-        Optional<Reclamo> reclamo = this.reclamoRepository.findById(imagenes.getIdReclamo());
-        if (reclamo.isPresent() && !reclamo.get().getEstado().equalsIgnoreCase("terminado")) {
-            reclamo.get().setImagenesByIdReclamo(imagenes.getImagenes());
-            imagenes.getImagenes().forEach(imagen -> {
-                imagen.getReclamosByIdReclamo().setIdReclamo(imagenes.getIdReclamo());
-                imagen.setDataFoto("assets//" + imagen.getDataFoto());
+    public void addImage(ImagenDto imageDto) throws ReclamoInexistenteException {
+        Optional<Complaint> reclamo = this.complaintRepository.findById(imageDto.getIdReclamo());
+        if (reclamo.isPresent() && !reclamo.get().getStatus().equalsIgnoreCase("terminado")) {
+            reclamo.get().setImagesByComplaintID(imageDto.getImagenes());
+            imageDto.getImagenes().forEach(imagen -> {
+                imagen.getComplaintsByComplaintID().setComplaintID(imageDto.getIdReclamo());
+                imagen.setPath("assets//" + imagen.getPath());
             });
-            this.reclamoRepository.save(reclamo.get());
+            this.complaintRepository.save(reclamo.get());
         } else
             throw new ReclamoInexistenteException("No existe el reclamo");
     }
 
     @Override
-    public Imagen getImageByComplaintID(String complaintID) {
-        return this.imagenRepository.getImageByComplaintID(Integer.parseInt(complaintID));
+    public Image getImageByComplaintID(String complaintID) {
+        return this.imageRepository.getImageByComplaintID(Integer.parseInt(complaintID));
     }
 
 }

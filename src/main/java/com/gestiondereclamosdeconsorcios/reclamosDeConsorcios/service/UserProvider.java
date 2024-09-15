@@ -1,8 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UsuarioNoEsDuenioNiIquilinoDelEdificioException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonaRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.CondoOwnerNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -22,26 +22,26 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
     private PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private PersonaRepository personaRepository;
+    private PersonRepository personRepository;
 
     @Override
     public void createUser(UserDetails personaLogin) {
-        Optional<Persona> personaEncontrada = this.personaRepository.findById(personaLogin.getUsername());
+        Optional<Person> personaEncontrada = this.personRepository.findById(personaLogin.getUsername());
         if (personaEncontrada.isPresent()) {
-            personaEncontrada.get().setContrasenia(this.bCryptPasswordEncoder.encode(personaLogin.getPassword()));
-            this.personaRepository.save(personaEncontrada.get());
+            personaEncontrada.get().setCredential(this.bCryptPasswordEncoder.encode(personaLogin.getPassword()));
+            this.personRepository.save(personaEncontrada.get());
 
         } else try {
-            throw new UsuarioNoEsDuenioNiIquilinoDelEdificioException
+            throw new CondoOwnerNotFoundException
                     ("El número de documento no corresponde a un inquilino o dueño válido para el consorcio");
-        } catch (UsuarioNoEsDuenioNiIquilinoDelEdificioException e) {
+        } catch (CondoOwnerNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void createAdmin(UserDetails personaLogin) {
-        var AminPersona = (Persona) personaLogin;
-        this.personaRepository.save(AminPersona);
+        var AminPersona = (Person) personaLogin;
+        this.personRepository.save(AminPersona);
     }
 
     @Override
@@ -63,12 +63,12 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
                     "Can't change password as no Authentication object found in context " + "for current user.");
         }
         String username = currentUser.getName();
-        Optional<Persona> persona = this.personaRepository.findById(username);
+        Optional<Person> persona = this.personRepository.findById(username);
         if (persona.isPresent()) {
-            persona.get().setContrasenia(this.bCryptPasswordEncoder.encode(persona.get().getContrasenia()));
+            persona.get().setCredential(this.bCryptPasswordEncoder.encode(persona.get().getPassword()));
         } else try {
-            throw new UsuarioNoEsDuenioNiIquilinoDelEdificioException("El usuario no existe");
-        } catch (UsuarioNoEsDuenioNiIquilinoDelEdificioException e) {
+            throw new CondoOwnerNotFoundException("he document ID doesn't belong to a owner/tenant of the condo");
+        } catch (CondoOwnerNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -76,12 +76,12 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
 
     @Override
     public boolean userExists(String username) {
-        return this.personaRepository.findById(username).isPresent();
+        return this.personRepository.findById(username).isPresent();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Persona> user = this.personaRepository.findById(username);
+        Optional<Person> user = this.personRepository.findById(username);
         if (!user.isPresent()) {
             throw new UsernameNotFoundException(username);
         }

@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +15,18 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class UnitController {
     @Autowired
-    UnitService unidadService;
+    UnitService unitService;
 
     @GetMapping("/")
-    public List<Unidad> getUnidades() {
-        List<Unidad> unidades = unidadService.getAll();
-        return unidades;
+    public List<Unit> getUnits() {
+        List<Unit> units = unitService.getAll();
+        return units;
     }
 
-    @GetMapping("/getUnit/{unitID}")
+    @GetMapping("/{unitID}")
     public ResponseEntity getUnitByUnitID(@PathVariable Integer unitID) {
         try {
-            return new ResponseEntity<>(unidadService.getID(unitID), HttpStatus.OK);
+            return new ResponseEntity<>(unitService.getID(unitID), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -34,24 +34,23 @@ public class UnitController {
     }
 
     @PostMapping("/")
-    public ResponseEntity CrearUnidad(@RequestBody UnidadDto newUnidad) {
+    public ResponseEntity createUnit(@RequestBody UnidadDto newUnit) {
         try {
-
-            return new ResponseEntity<>(unidadService.saveUnidad(newUnidad), HttpStatus.CREATED);
+            return new ResponseEntity<>(unitService.saveUnit(newUnit), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Unidad> replaceUnidad(@RequestBody Unidad newUnidad, @PathVariable Integer id) {
-        return new ResponseEntity<>(unidadService.update(newUnidad, id), HttpStatus.OK);
+    public ResponseEntity<Unit> replaceUnidad(@RequestBody Unit newUnit, @PathVariable Integer id) {
+        return new ResponseEntity<>(unitService.update(newUnit, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUnidad(@PathVariable Integer id) {
+    public ResponseEntity deleteUnit(@PathVariable Integer id) {
         try {
-            unidadService.remove(id);
+            unitService.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

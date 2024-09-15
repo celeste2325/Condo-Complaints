@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Imagen;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Image;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImagenDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ import java.nio.file.Paths;
 public class ImageController {
     private static final String UPLOAD_DIR = "D:\\programacion2024\\Condo-Complaints\\src\\main\\java\\com\\gestiondereclamosdeconsorcios\\reclamosDeConsorcios\\";
     @Autowired
-    ImageService imagenService;
+    ImageService imageService;
 
     @PostMapping("/")
     public ResponseEntity cargarImagenesAReclamo(@RequestBody ImagenDto imagen) {
         try {
-            this.imagenService.agregarImagen(imagen);
+            this.imageService.addImage(imagen);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -35,9 +35,9 @@ public class ImageController {
 
     @GetMapping("/{complaintID}")
     public ResponseEntity<Resource> getImageByComplaintID(@PathVariable String complaintID) throws MalformedURLException {
-        Imagen imageByComplaintID = this.imagenService.getImageByComplaintID(complaintID);
+        Image imageByComplaintID = this.imageService.getImageByComplaintID(complaintID);
 
-        Path imagePath = Paths.get(UPLOAD_DIR + imageByComplaintID.getDataFoto() + "." + imageByComplaintID.getTipo());
+        Path imagePath = Paths.get(UPLOAD_DIR + imageByComplaintID.getPath() + "." + imageByComplaintID.getExtension());
         Resource image = new UrlResource(imagePath.toUri());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }

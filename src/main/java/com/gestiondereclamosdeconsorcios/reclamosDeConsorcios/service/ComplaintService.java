@@ -1,10 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.EdificioNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoEstaHabilitadoParaRealizarUnReclamo;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.InvalidBuildingResidentException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoComplaintsFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 
@@ -12,17 +12,17 @@ import java.util.List;
 
 public interface ComplaintService {
 
-    Reclamo createReclamo(Reclamo newReclamo) throws EdificioNoEncontradoException, UnidadInexistenteException, NoEstaHabilitadoParaRealizarUnReclamo;
+    Complaint createComplaint(Complaint complaint) throws BuildingNotFoundException, UnitNotFoundException, InvalidBuildingResidentException;
 
-    List<Reclamo> getAll();
+    List<Complaint> getAll();
 
-    Reclamo updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest);
+    Complaint updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest);
 
-    List<Reclamo> getAllByEstado(String estado);
+    List<Complaint> getAllByStatus(String status);
 
-    List<Reclamo> getReclamos(Integer codigoEdificio, Integer codigoUnidad, Integer idReclamo) throws SinReclamosCargadosException;
+    List<Complaint> getComplaints(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException;
 
-    List<ComplaintsByDocumentID> getComplaints(String documentID);
+    List<ComplaintsByDocumentID> getComplaintsByDocument(String document) throws NoComplaintsFoundException;
 
-    Reclamo getByID(String complaintID);
+    Complaint getByID(String complaintID);
 }

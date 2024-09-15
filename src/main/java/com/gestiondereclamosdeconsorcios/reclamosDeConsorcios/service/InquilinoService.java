@@ -9,7 +9,7 @@ import java.util.List;
 public interface InquilinoService {
     List<InquilinoImpresionDto> getAll();
 
-    void save(InquilinoCrearDto newInquilino) throws UnidadInexistenteException, UnidadOcupadaException, DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException;
+    void save(InquilinoCrearDto newInquilino) throws UnitNotFoundException, UnidadOcupadaException, DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException;
 
     void delete(Integer id);
 
@@ -18,5 +18,5 @@ public interface InquilinoService {
     List<InquilinoImpresionDto> getByDocumento(String documento) throws DocumentoNoEncontradoException;
 
 
-    void liberarUnidad(Integer identificadorUnidad, Integer codigoEdificio) throws UnidadInexistenteException;
+    void liberarUnidad(Integer identificadorUnidad, Integer codigoEdificio) throws UnitNotFoundException;
 }

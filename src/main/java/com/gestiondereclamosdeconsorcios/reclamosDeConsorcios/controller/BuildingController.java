@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Edificio;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Building;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.BuildingService;
@@ -16,12 +16,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class BuildingController {
     @Autowired
-    private BuildingService edificioService;
+    private BuildingService buildingService;
 
     @PostMapping("/")
-    public ResponseEntity crearEdificio(@RequestBody Edificio newEdificio) {
+    public ResponseEntity createBuilding(@RequestBody Building newBuilding) {
         try {
-            this.edificioService.saveEdificio(newEdificio);
+            this.buildingService.createBuilding(newBuilding);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -29,19 +29,19 @@ public class BuildingController {
     }
 
     @GetMapping("/")
-    public List<Edificio> getEdificios() {
+    public List<Building> getBuildings() {
         try {
-            return this.edificioService.getAll();
+            return this.buildingService.getAll();
         } catch (Exception e) {
             e.getMessage();
         }
         return null;
     }
 
-    @GetMapping("/habitantes/{codigo}")
-    public List<Inquilino> getHabitantesEdificio(@PathVariable Integer codigo) {
+    @GetMapping("/habitantes/{buildingID}")
+    public List<Inquilino> getHabitantesEdificio(@PathVariable Integer buildingID) {
         try {
-            return this.edificioService.getHabitantes(codigo);
+            return this.buildingService.getHabitantes(buildingID);
         } catch (Exception e) {
             e.getMessage();
         }
@@ -49,10 +49,10 @@ public class BuildingController {
         return null;
     }
 
-    @GetMapping("/{codigoEdificio}")
-    public Edificio getEdificioByCodigo(@PathVariable Integer codigoEdificio) {
+    @GetMapping("/{buildingID}")
+    public Building getBuildingByID(@PathVariable Integer buildingID) {
         try {
-            return this.edificioService.getEdificio(codigoEdificio);
+            return this.buildingService.getBuilding(buildingID);
         } catch (Exception e) {
             e.getMessage();
         }
@@ -62,23 +62,23 @@ public class BuildingController {
 
     @GetMapping("/habilitados/{codigo}")
     public List<Inquilino> getHabilitadosEdificio(@PathVariable Integer codigo) {
-        return this.edificioService.getHabilitados(codigo);
+        return this.buildingService.getHabilitados(codigo);
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity deleteEdificio(@PathVariable Integer id) {
-        edificioService.remove(id);
+    ResponseEntity deleteBuilding(@PathVariable Integer id) {
+        buildingService.remove(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Edificio> replaceEdificio(@RequestBody Edificio newEdificio, @PathVariable Integer id) {
-        return new ResponseEntity<>(edificioService.update(newEdificio, id), HttpStatus.OK);
+    ResponseEntity<Building> replaceEdificio(@RequestBody Building newBuilding, @PathVariable Integer id) {
+        return new ResponseEntity<>(buildingService.update(newBuilding, id), HttpStatus.OK);
     }
 
     @GetMapping("/getBuildingWithUnits/{tenantDocumentID}")
     public List<BuildingWithUnitsByTenant> getBuildingByTenant(@PathVariable String tenantDocumentID) {
-        return this.edificioService.getBuildingByTenant(tenantDocumentID);
+        return this.buildingService.getBuildingByTenant(tenantDocumentID);
     }
 
 }

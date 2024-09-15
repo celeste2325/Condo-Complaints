@@ -14,8 +14,8 @@ public class DuenioImpresionDto {
 
     public DuenioImpresionDto(Duenio duenio) {
         this.id = duenio.getId();
-        this.documento = duenio.getDocumento();
-        this.nombre = duenio.getPersona().getNombre();
-        this.codigoUnidad = duenio.getIdentificador();
+        this.documento = duenio.getDocument();
+        this.nombre = duenio.getPerson().getName();
+        this.codigoUnidad = duenio.getUnitID();
     }
 }

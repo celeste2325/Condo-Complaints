@@ -1,17 +1,17 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.EdificioNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoEstaHabilitadoParaRealizarUnReclamo;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnidadInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.InvalidBuildingResidentException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoComplaintsFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.EdificioRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImagenRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ReclamoRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ComplaintRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImageRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,95 +24,99 @@ import java.util.stream.Collectors;
 public class ComplaintServiceImpl implements ComplaintService {
 
     @Autowired
-    ReclamoRepository reclamoRepository;
+    ComplaintRepository complaintRepository;
     @Autowired
-    EdificioRepository edificioRepository;
+    BuildingRepository buildingRepository;
     @Autowired
-    UnidadRepository unidadRepository;
+    UnitRepository unitRepository;
 
     @Autowired
-    ImagenRepository imagenRepository;
+    ImageRepository imageRepository;
 
     @Override
     @Transactional
-    public Reclamo createReclamo(Reclamo newReclamo) throws EdificioNoEncontradoException, UnidadInexistenteException, NoEstaHabilitadoParaRealizarUnReclamo {
-        boolean existEdificio = this.edificioRepository.existsById(newReclamo.getCodigoEdificio());
-        boolean unidadCorrespondeAlEdificio = this.unidadRepository.existsByIdentificadorAndCodigoEdificio(newReclamo.getIdentificador(), newReclamo.getCodigoEdificio());
-        Reclamo complaintCreated;
-        if (existEdificio) {
-            if (unidadCorrespondeAlEdificio) {
-                List<Object[]> habilitados = this.edificioRepository.getHabilitados(newReclamo.getCodigoEdificio());
+    public Complaint createComplaint(Complaint complaint) throws BuildingNotFoundException, UnitNotFoundException, InvalidBuildingResidentException {
+        boolean buildingExists = this.buildingRepository.existsById(complaint.getBuildingID());
+        boolean unitsExists = this.unitRepository.existsByUnitIDAndBuildingID(complaint.getUnitID(), complaint.getBuildingID());
+        Complaint complaintCreated;
+        if (buildingExists) {
+            if (unitsExists) {
+                List<Object[]> habilitados = this.buildingRepository.getHabilitados(complaint.getBuildingID());
                 List<Inquilino> habilitadosConv = habilitados
                         .stream()
                         .map(habilitado -> new Inquilino(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
                         .collect(Collectors.toList());
 
-                boolean esHabitanteDelEdificio = habilitadosConv.stream().filter(inquilino -> inquilino.getDocumento().equals(newReclamo.getPersonasByDocumento().getDocumento())).count() > 0;
+                boolean esHabitanteDelEdificio = habilitadosConv.stream().filter(inquilino -> inquilino.getDocument().equals(complaint.getPersonByDocument().getDocument())).count() > 0;
                 if (esHabitanteDelEdificio) {
-                    complaintCreated = this.reclamoRepository.save(newReclamo);
-                    newReclamo.getImagenesByIdReclamo().forEach(
+                    complaintCreated = this.complaintRepository.save(complaint);
+                    complaint.getImagesByComplaintID().forEach(
                             imagen -> {
-                                imagen.setDataFoto("assets//" + complaintCreated.getIdReclamo() + "//" + imagen.getDataFoto());
-                                imagen.setTipo(imagen.getTipo());
+                                imagen.setPath("assets//" + complaintCreated.getComplaintID() + "//" + imagen.getPath());
+                                imagen.setExtension(imagen.getExtension());
                             }
                     );
 
                 } else
-                    throw new NoEstaHabilitadoParaRealizarUnReclamo("El documento ingresado no pertenece a un dueño/inquilino del edificio");
-            } else throw new UnidadInexistenteException("La unidad no existe en el edificio");
-        } else throw new EdificioNoEncontradoException("El edificio no existe");
+                    throw new InvalidBuildingResidentException("The entered document does not belong to an owner/tenant of the building.");
+            } else throw new UnitNotFoundException("Unit not found");
+        } else throw new BuildingNotFoundException("Building not found.");
         return complaintCreated;
     }
 
     @Override
-    public List<Reclamo> getAll() {
-        return this.reclamoRepository.findAll();
+    public List<Complaint> getAll() {
+        return this.complaintRepository.findAll();
     }
 
     @Override
-    public Reclamo updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest) {
-        return this.reclamoRepository.findById(Integer.parseInt(updateComplaintStatusRequest.getComplaintID())).map(complaint -> {
-            complaint.setEstado(updateComplaintStatusRequest.getNewStatus());
-            return this.reclamoRepository.save(complaint);
+    public Complaint updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest) {
+        return this.complaintRepository.findById(Integer.parseInt(updateComplaintStatusRequest.getComplaintID())).map(complaint -> {
+            complaint.setStatus(updateComplaintStatusRequest.getNewStatus());
+            return this.complaintRepository.save(complaint);
         }).get();
     }
 
     @Override
-    public List<Reclamo> getAllByEstado(String estado) {
-        return this.reclamoRepository.getByEstado(estado);
+    public List<Complaint> getAllByStatus(String status) {
+        return this.complaintRepository.getByStatus(status);
     }
 
     @Override
-    public List<Reclamo> getReclamos(Integer codigoEdificio, Integer codigoUnidad, Integer idReclamo) throws SinReclamosCargadosException {
-        List<Reclamo> reclamos = this.reclamoRepository.findAllByCodigoEdificioOrIdentificadorOrIdReclamo(codigoEdificio, codigoUnidad, idReclamo);
+    public List<Complaint> getComplaints(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException {
+        List<Complaint> reclamos = this.complaintRepository.findAllByBuildingIDOrUnitIDOrComplaintID(buildingID, unitID, complaintID);
         if (!reclamos.isEmpty()) {
             return reclamos;
-        } else throw new SinReclamosCargadosException("No existen reclamos cargados");
+        } else throw new NoComplaintsFoundException("You have not submitted any complaints yet.");
 
     }
 
     @Override
-    public List<ComplaintsByDocumentID> getComplaints(String documentID) {
-        List<Object[]> results = this.reclamoRepository.getComplaintsByTenantOrAdmin(documentID);
-        List<ComplaintsByDocumentID> complaints = new ArrayList<>();
+    public List<ComplaintsByDocumentID> getComplaintsByDocument(String document) throws NoComplaintsFoundException {
+        List<Object[]> results = this.complaintRepository.getComplaintsByTenantOrAdmin(document);
 
-        //// Transforms the received data into the BuildingWithUnitsByTenant DTO.
-        for (Object[] row : results) {
-            ComplaintsByDocumentID complaintsByTenant = new ComplaintsByDocumentID(
-                    (Integer) row[0],     // complaintID
-                    (String) row[1],     // buildingName
-                    (String) row[2],     // locationIssue
-                    (String) row[3],     // description
-                    (Integer) row[4],    // unit
-                    (String) row[5],     // status
-                    (String) row[6]     // image
-            );
-            complaints.add(complaintsByTenant);
-        }
-        return complaints;
+        if (!results.isEmpty()) {
+            List<ComplaintsByDocumentID> complaints = new ArrayList<>();
+
+            //// Transforms the received data into the BuildingWithUnitsByTenant DTO.
+            for (Object[] row : results) {
+                ComplaintsByDocumentID complaintsByTenant = new ComplaintsByDocumentID(
+                        (Integer) row[0],     // complaintID
+                        (String) row[1],     // buildingName
+                        (String) row[2],     // locationIssue
+                        (String) row[3],     // description
+                        (Integer) row[4],    // unit
+                        (String) row[5],     // status
+                        (String) row[6]     // image
+                );
+                complaints.add(complaintsByTenant);
+            }
+            return complaints;
+        } else throw new NoComplaintsFoundException("You have not submitted any complaints yet.");
+
     }
 
-    public Reclamo getByID(String complaintID) {
-        return this.reclamoRepository.getByIdReclamo(Integer.parseInt(complaintID));
+    public Complaint getByID(String complaintID) {
+        return this.complaintRepository.getByComplaintID(Integer.parseInt(complaintID));
     }
 }

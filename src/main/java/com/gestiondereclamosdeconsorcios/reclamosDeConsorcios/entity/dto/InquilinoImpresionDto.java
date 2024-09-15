@@ -14,8 +14,8 @@ public class InquilinoImpresionDto {
 
     public InquilinoImpresionDto(Inquilino inquilino) {
         this.id = inquilino.getId();
-        this.documento = inquilino.getDocumento();
-        this.nombre = inquilino.getPersona().getNombre();
-        this.codigoUnidad = inquilino.getIdentificador();
+        this.documento = inquilino.getDocument();
+        this.nombre = inquilino.getPerson().getName();
+        this.codigoUnidad = inquilino.getUnitID();
     }
 }

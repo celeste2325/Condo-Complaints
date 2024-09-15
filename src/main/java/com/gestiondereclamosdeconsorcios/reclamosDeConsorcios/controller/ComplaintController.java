@@ -1,7 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.SinReclamosCargadosException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoComplaintsFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ComplaintService;
@@ -17,44 +17,44 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ComplaintController {
     @Autowired
-    ComplaintService reclamoService;
+    ComplaintService complaintService;
 
     @PostMapping("/")
-    public ResponseEntity createNewReclamo(@RequestBody Reclamo newReclamo) {
+    public ResponseEntity createComplaint(@RequestBody Complaint complaint) {
         try {
-            return new ResponseEntity<>(this.reclamoService.createReclamo(newReclamo), HttpStatus.CREATED);
+            return new ResponseEntity<>(this.complaintService.createComplaint(complaint), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/")
-    public List<Reclamo> getReclamos() {
-        return this.reclamoService.getAll();
+    public List<Complaint> getComplaints() {
+        return this.complaintService.getAll();
     }
 
-    @GetMapping("estado/{estado}")
-    public List<Reclamo> getReclamosPorEstado(@PathVariable String estado) {
-        return this.reclamoService.getAllByEstado(estado);
+    @GetMapping("/{status}")
+    public List<Complaint> getComplaintsByStatus(@PathVariable String status) {
+        return this.complaintService.getAllByStatus(status);
     }
 
-    @GetMapping("/getReclamos")
-    public ResponseEntity getReclamos(@RequestParam(name = "codigoEdificio", defaultValue = "0") Integer codigoEdificio, @RequestParam(name = "codigoUnidad", defaultValue = "0") Integer codigoUnidad, @RequestParam(name = "idReclamo", defaultValue = "0") Integer idReclamo) {
+    @GetMapping("/getComplaints")
+    public ResponseEntity getComplaints(@RequestParam(name = "buildingID", defaultValue = "0") Integer buildingID, @RequestParam(name = "unitID", defaultValue = "0") Integer unitID, @RequestParam(name = "complaintID", defaultValue = "0") Integer complaintID) {
         try {
-            return new ResponseEntity<>(this.reclamoService.getReclamos(codigoEdificio, codigoUnidad, idReclamo), HttpStatus.OK);
-        } catch (SinReclamosCargadosException e) {
+            return new ResponseEntity<>(this.complaintService.getComplaints(buildingID, unitID, complaintID), HttpStatus.OK);
+        } catch (NoComplaintsFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/getComplaintsByTenantOrAdmin")
-    public ResponseEntity<List<ComplaintsByDocumentID>> getComplaints(@RequestParam(required = false) String tenantDocument) {
-        return new ResponseEntity<>(this.reclamoService.getComplaints(tenantDocument), HttpStatus.OK);
+    public ResponseEntity<List<ComplaintsByDocumentID>> getComplaints(@RequestParam(required = false) String tenantDocument) throws NoComplaintsFoundException {
+        return new ResponseEntity<>(this.complaintService.getComplaintsByDocument(tenantDocument), HttpStatus.OK);
     }
 
     @PutMapping("/updateComplaintStatus")
     public ResponseEntity updateComplaintStatus(@RequestBody UpdateComplaintStatusRequest updateComplaintStatusRequest) {
-        return new ResponseEntity(this.reclamoService.updateComplaintStatus(updateComplaintStatusRequest), HttpStatus.OK);
+        return new ResponseEntity(this.complaintService.updateComplaintStatus(updateComplaintStatusRequest), HttpStatus.OK);
     }
 
 

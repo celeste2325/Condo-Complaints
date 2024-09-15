@@ -4,13 +4,13 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Documen
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoSeEncontraronDueniosException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Duenio;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Persona;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unidad;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioCrearDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.DuenioImpresionDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.DuenioRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonaRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnidadRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +24,9 @@ public class DuenioServiceImpl implements DuenioService {
     @Autowired
     DuenioRepository duenioRepository;
     @Autowired
-    UnidadRepository unidadRepository;
+    UnitRepository unitRepository;
     @Autowired
-    PersonaRepository personaRepository;
+    PersonRepository personRepository;
 
 
     @Override
@@ -43,7 +43,7 @@ public class DuenioServiceImpl implements DuenioService {
     @Transactional
     public void saveDuenio(DuenioCrearDto newDuenio) throws DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException {
         //para validar si la persona a la que se quiere asignar como dueño ya existe en la base
-        Optional<Persona> personaEncontrada = this.personaRepository.findById(newDuenio.getDocumento());
+        Optional<Person> personaEncontrada = this.personRepository.findById(newDuenio.getDocumento());
         if (this.losDatosSonValidos(newDuenio)) {
             if (personaEncontrada.isPresent()) {
                 this.duenioRepository.asignarDuenio(newDuenio.getIdentificador(), newDuenio.getDocumento());
@@ -54,10 +54,10 @@ public class DuenioServiceImpl implements DuenioService {
 
     private boolean losDatosSonValidos(DuenioCrearDto newDuenio) throws DocumentoAsignadoPreviamenteAlAUnidadException {
         //para validar si existe la unidad a la cual quiere asignar el dueño.
-        Optional<Unidad> unidadEncontrada = this.unidadRepository.findById(newDuenio.getIdentificador());
+        Optional<Unit> unidadEncontrada = this.unitRepository.findById(newDuenio.getIdentificador());
 
         //para validar si el dueño a asignar ya fue asignado a esa misma unidad
-        boolean yaFueAsignado = this.duenioRepository.existsByDocumentoAndIdentificador(newDuenio.getDocumento(), unidadEncontrada.get().getIdentificador());
+        boolean yaFueAsignado = this.duenioRepository.existsByDocumentAndUnitID(newDuenio.getDocumento(), unidadEncontrada.get().getUnitID());
         if (unidadEncontrada.isPresent()) {
             if (!yaFueAsignado) {
                 return true;
@@ -70,24 +70,24 @@ public class DuenioServiceImpl implements DuenioService {
 
     @Override
     public List<Duenio> dueniosPorEdificio(Integer codigo) {
-        return this.duenioRepository.dueniosPorEdificio(codigo);
+        return this.duenioRepository.ownersByBuildingID(codigo);
     }
 
     @Override
     @Transactional
     public void update(String newDocumentoDuenio, Integer id, String documentoDuenioAntiguo) throws NoSeEncontraronDueniosException {
-        Duenio duenio = this.duenioRepository.findByDocumentoAndIdentificador(documentoDuenioAntiguo, id);
+        Duenio duenio = this.duenioRepository.findByDocumentAndUnitID(documentoDuenioAntiguo, id);
         if (duenio != null) {
-            duenio.setDocumento(newDocumentoDuenio);
+            duenio.setDocument(newDocumentoDuenio);
             this.duenioRepository.deleteById(duenio.getId());
-            this.duenioRepository.asignarDuenio(id, duenio.getDocumento());
+            this.duenioRepository.asignarDuenio(id, duenio.getDocument());
         } else throw new NoSeEncontraronDueniosException("No existe el dueño");
     }
 
     @Override
     public List<DuenioImpresionDto> getDuenios(Integer codigoUnidad, Integer idDuenio, String documento) throws NoSeEncontraronDueniosException {
         List<DuenioImpresionDto> dueniosDto = new ArrayList<>();
-        List<Duenio> duenios = this.duenioRepository.findAllByIdentificadorOrIdOrDocumento(codigoUnidad, idDuenio, documento);
+        List<Duenio> duenios = this.duenioRepository.findAllByUnitIDOrIdOrDocument(codigoUnidad, idDuenio, documento);
         if (!duenios.isEmpty()) {
             duenios.stream().forEach(duenio -> {
                 DuenioImpresionDto duenioDto = new DuenioImpresionDto(duenio);

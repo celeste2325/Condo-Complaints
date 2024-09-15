@@ -1,6 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Reclamo;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +20,11 @@ import java.nio.file.Paths;
 public class FileController {
     private static final String UPLOAD_DIR = "D:\\programacion2024\\Condo-Complaints\\src\\main\\java\\com\\gestiondereclamosdeconsorcios\\reclamosDeConsorcios\\";
     @Autowired
-    ComplaintService reclamoService;
+    ComplaintService complaintService;
 
     @PostMapping("/{complaintID}")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable String complaintID) throws IOException {
-        Reclamo complaint = this.reclamoService.getByID(complaintID);
+        Complaint complaint = this.complaintService.getByID(complaintID);
         if (complaint != null) {
             String fileName = file.getOriginalFilename();
             String decodeFileName = java.net.URLDecoder.decode(fileName, StandardCharsets.UTF_8);
