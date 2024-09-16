@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class InquilinoCrearDto {
-    private Integer identificador;
-    private String documento;
+public class TenantDto {
+    private Integer unitID;
+    private String document;
 }

@@ -9,14 +9,14 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadD
 import java.util.List;
 
 public interface UnitService {
-    Integer saveUnit(UnidadDto unit) throws BuildingNotFoundException, LaUnidadYaFueCreada;
+    Integer createUnit(UnidadDto unit) throws BuildingNotFoundException, LaUnidadYaFueCreada;
 
-    void remove(Integer id);
+    void deleteUnit(Integer unitID);
 
-    Unit update(Unit newUnit, Integer unitID);
+    Unit updateUnit(Unit newUnit, Integer unitID);
 
-    List<Unit> getAll();
+    List<Unit> findAll();
 
-    Unit getID(Integer unitID) throws UnitNotFoundException;
+    Unit findByID(Integer unitID) throws UnitNotFoundException;
 
 }

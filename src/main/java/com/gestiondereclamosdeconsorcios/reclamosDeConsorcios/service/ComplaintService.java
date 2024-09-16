@@ -14,15 +14,15 @@ public interface ComplaintService {
 
     Complaint createComplaint(Complaint complaint) throws BuildingNotFoundException, UnitNotFoundException, InvalidBuildingResidentException;
 
-    List<Complaint> getAll();
+    List<Complaint> findAll();
 
     Complaint updateComplaintStatus(UpdateComplaintStatusRequest updateComplaintStatusRequest);
 
-    List<Complaint> getAllByStatus(String status);
+    List<Complaint> findByStatus(String status);
 
-    List<Complaint> getComplaints(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException;
+    List<Complaint> findByParameter(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException;
 
-    List<ComplaintsByDocumentID> getComplaintsByDocument(String document) throws NoComplaintsFoundException;
+    List<ComplaintsByDocumentID> findByAllOrByTenant(String document) throws NoComplaintsFoundException;
 
     Complaint getByID(String complaintID);
 }

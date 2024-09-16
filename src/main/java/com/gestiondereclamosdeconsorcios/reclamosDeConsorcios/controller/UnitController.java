@@ -3,7 +3,6 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnitService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,47 +13,48 @@ import java.util.List;
 @RequestMapping("/api/unit")
 @CrossOrigin(origins = "*")
 public class UnitController {
-    @Autowired
-    UnitService unitService;
+    private final UnitService unitService;
 
-    @GetMapping("/")
-    public List<Unit> getUnits() {
-        List<Unit> units = unitService.getAll();
-        return units;
-    }
-
-    @GetMapping("/{unitID}")
-    public ResponseEntity getUnitByUnitID(@PathVariable Integer unitID) {
-        try {
-            return new ResponseEntity<>(unitService.getID(unitID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
+    public UnitController(UnitService unitService) {
+        this.unitService = unitService;
     }
 
     @PostMapping("/")
     public ResponseEntity createUnit(@RequestBody UnidadDto newUnit) {
         try {
-            return new ResponseEntity<>(unitService.saveUnit(newUnit), HttpStatus.CREATED);
+            return new ResponseEntity<>(unitService.createUnit(newUnit), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Unit> replaceUnidad(@RequestBody Unit newUnit, @PathVariable Integer id) {
-        return new ResponseEntity<>(unitService.update(newUnit, id), HttpStatus.OK);
+    public ResponseEntity<Unit> updateUnit(@RequestBody Unit newUnit, @PathVariable Integer id) {
+        return new ResponseEntity<>(unitService.updateUnit(newUnit, id), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteUnit(@PathVariable Integer id) {
-        try {
-            unitService.remove(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @GetMapping("/")
+    public List<Unit> findAll() {
+        List<Unit> units = unitService.findAll();
+        return units;
+    }
 
+    @GetMapping("/{unitID}")
+    public ResponseEntity findByID(@PathVariable Integer unitID) {
+        try {
+            return new ResponseEntity<>(unitService.findByID(unitID), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{unitID}")
+    public ResponseEntity<String> deleteByID(@PathVariable Integer unitID) {
+        try {
+            unitService.deleteUnit(unitID);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

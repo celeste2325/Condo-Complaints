@@ -1,11 +1,13 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ReclamoInexistenteException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Image;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImagenDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ComplaintNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImageDto;
+import org.springframework.core.io.Resource;
+
+import java.net.MalformedURLException;
 
 public interface ImageService {
-    void addImage(ImagenDto imageDto) throws ReclamoInexistenteException;
+    void addImage(ImageDto imageDto) throws ComplaintNotFoundException;
 
-    Image getImageByComplaintID(String complaintID);
+    Resource findByComplaintID(String complaintID) throws MalformedURLException;
 }

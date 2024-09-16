@@ -1,28 +1,28 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Building;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
 
 import java.util.List;
 
 public interface BuildingService {
 
-    List<Building> getAll();
+    List<Building> findAll();
 
     void createBuilding(Building building);
 
-    void remove(Integer buildingID);
+    void deleteByID(Integer buildingID);
 
-    Building update(Building newBuilding, Integer buildingID);
+    Building updateBuilding(Building newBuilding, Integer buildingID);
 
-    List<Inquilino> getHabitantes(Integer buildingID);
+    List<Tenant> findTenantsByBuildingID(Integer buildingID);
 
-    List<Inquilino> getHabilitados(Integer codigo);
+    List<Tenant> getHabilitados(Integer codigo);
 
-    Building getBuilding(Integer buildingID);
+    Building findByID(Integer buildingID);
 
-    List<BuildingWithUnitsByTenant> getBuildingByTenant(String tenantDocumentID);
+    List<BuildingWithUnitsByTenant> findByTenant(String tenantDocumentID);
 }
 
 

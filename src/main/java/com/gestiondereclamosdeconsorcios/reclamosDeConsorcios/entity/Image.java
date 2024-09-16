@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @Entity
-@Table(name = "images", schema = "dbo", catalog = "gestion_reclamo_consorcio")
+@Table(name = "images", schema = "dbo", catalog = "condo_complaints")
 public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

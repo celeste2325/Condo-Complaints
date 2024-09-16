@@ -5,7 +5,6 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Incorre
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.existingAccount;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.AuthDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.AuthServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
+    private final AuthServiceImpl userDetailsService;
 
-    @Autowired
-    AuthServiceImpl userDetailsService;
+    public AuthController(AuthServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity signUp(@RequestBody AuthDto singUpData) {

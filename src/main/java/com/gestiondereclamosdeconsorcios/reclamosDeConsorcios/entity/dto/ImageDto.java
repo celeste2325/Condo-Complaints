@@ -9,11 +9,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ImagenDto {
-    List<Image> imagenes;
-    private Integer idReclamo;
+public class ImageDto {
+    List<Image> images;
+    private Integer complaintID;
 
-    public ImagenDto() {
-        this.imagenes = new ArrayList<>();
+    public ImageDto() {
+        this.images = new ArrayList<>();
     }
 }

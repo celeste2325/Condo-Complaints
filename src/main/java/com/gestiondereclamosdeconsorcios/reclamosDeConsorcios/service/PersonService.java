@@ -7,13 +7,13 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import java.util.List;
 
 public interface PersonService {
-    List<Person> getAll();
+    List<Person> findAll();
 
-    void save(Person newPerson) throws YaExisteUnaPersonaConMismoDniException;
+    void createPerson(Person newPerson) throws YaExisteUnaPersonaConMismoDniException;
 
     Person update(Person newPersona, String document);
 
-    void delete(String document);
+    void deleteByID(String document);
 
-    Person getPersonByDocument(String document) throws DocumentoNoEncontradoException;
+    Person findByDocument(String document) throws DocumentoNoEncontradoException;
 }

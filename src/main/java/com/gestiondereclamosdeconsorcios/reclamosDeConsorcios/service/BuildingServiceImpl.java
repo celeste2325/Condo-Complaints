@@ -1,11 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Building;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnitDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,8 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class BuildingServiceImpl implements BuildingService {
-    @Autowired
-    private BuildingRepository buildingRepository;
+    private final BuildingRepository buildingRepository;
+
+    public BuildingServiceImpl(BuildingRepository buildingRepository) {
+        this.buildingRepository = buildingRepository;
+    }
 
     @Override
     @Transactional
@@ -26,17 +28,17 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public List<Building> getAll() {
+    public List<Building> findAll() {
         return buildingRepository.findAll();
     }
 
     @Override
-    public void remove(Integer buildingID) {
+    public void deleteByID(Integer buildingID) {
         buildingRepository.deleteById(buildingID);
     }
 
     @Override
-    public Building update(Building newBuilding, Integer buildingID) {
+    public Building updateBuilding(Building newBuilding, Integer buildingID) {
         return buildingRepository.findById(buildingID).map(edificio -> {
             edificio.setAddress(newBuilding.getAddress());
             edificio.setName(newBuilding.getName());
@@ -45,26 +47,26 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public List<Inquilino> getHabitantes(Integer buildingID) {
-        return this.buildingRepository.getHabitantes(buildingID);
+    public List<Tenant> findTenantsByBuildingID(Integer buildingID) {
+        return this.buildingRepository.getBuildingTenants(buildingID);
     }
 
     @Override
-    public List<Inquilino> getHabilitados(Integer codigo) {
+    public List<Tenant> getHabilitados(Integer codigo) {
         List<Object[]> habilitados = this.buildingRepository.getHabilitados(codigo);
         return habilitados
                 .stream()
-                .map(habilitado -> new Inquilino(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
+                .map(habilitado -> new Tenant(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Building getBuilding(Integer buildingID) {
+    public Building findByID(Integer buildingID) {
         return this.buildingRepository.findByBuildingID(buildingID);
     }
 
     @Override
-    public List<BuildingWithUnitsByTenant> getBuildingByTenant(String tenantDocumentID) {
+    public List<BuildingWithUnitsByTenant> findByTenant(String tenantDocumentID) {
         List<Object[]> results = this.buildingRepository.getBuildingByTenant(tenantDocumentID);
         List<BuildingWithUnitsByTenant> buildings = new ArrayList<>();
 

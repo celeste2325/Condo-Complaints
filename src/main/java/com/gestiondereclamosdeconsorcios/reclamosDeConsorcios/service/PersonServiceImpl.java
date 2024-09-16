@@ -4,7 +4,6 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Documen
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.YaExisteUnaPersonaConMismoDniException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,16 +11,19 @@ import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
-    @Autowired
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
+
+    public PersonServiceImpl(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
 
     @Override
-    public List<Person> getAll() {
+    public List<Person> findAll() {
         return this.personRepository.findAll();
     }
 
     @Override
-    public void save(Person newPerson) throws YaExisteUnaPersonaConMismoDniException {
+    public void createPerson(Person newPerson) throws YaExisteUnaPersonaConMismoDniException {
         boolean existeLaPersona = this.personRepository.existsById(newPerson.getDocument());
         if (!existeLaPersona) {
             this.personRepository.save(newPerson);
@@ -39,12 +41,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void delete(String document) {
+    public void deleteByID(String document) {
         this.personRepository.deleteById(document);
     }
 
     @Override
-    public Person getPersonByDocument(String documentID) throws DocumentoNoEncontradoException {
+    public Person findByDocument(String documentID) throws DocumentoNoEncontradoException {
         Optional<Person> persona = this.personRepository.findByDocument(documentID);
         if (persona.isPresent()) {
             return persona.get();

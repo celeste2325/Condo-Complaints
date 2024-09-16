@@ -2,7 +2,6 @@ package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ComplaintService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +18,12 @@ import java.nio.file.Paths;
 @CrossOrigin(origins = "*")
 public class FileController {
     private static final String UPLOAD_DIR = "D:\\programacion2024\\Condo-Complaints\\src\\main\\java\\com\\gestiondereclamosdeconsorcios\\reclamosDeConsorcios\\";
-    @Autowired
-    ComplaintService complaintService;
+
+    private final ComplaintService complaintService;
+
+    public FileController(ComplaintService complaintService) {
+        this.complaintService = complaintService;
+    }
 
     @PostMapping("/{complaintID}")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable String complaintID) throws IOException {
@@ -41,4 +44,5 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Complaint not found");
     }
+    //TODO change the logic to serviceImpl and think about if this should be in image
 }

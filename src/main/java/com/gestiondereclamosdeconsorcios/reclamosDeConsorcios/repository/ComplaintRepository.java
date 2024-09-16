@@ -17,7 +17,7 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
             "    c.status as status, i.path as image\n" +
             "    from complaints c inner join dbo.images i on c.complaintID = i.complaintID\n" +
             "    inner join dbo.buildings b on b.buildingID = c.buildingID where (?1 IS NULL OR c.document = ?1)", nativeQuery = true)
-    List<Object[]> getComplaintsByTenantOrAdmin(String documentID);
+    List<Object[]> getAllComplaintsOrByTenant(String documentID);
 
     Complaint getByComplaintID(int complaintID);
 }

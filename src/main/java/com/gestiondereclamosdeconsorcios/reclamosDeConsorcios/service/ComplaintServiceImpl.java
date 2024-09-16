@@ -5,14 +5,12 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Invalid
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoComplaintsFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Inquilino;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ComplaintRepository;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ImageRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnitRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,15 +21,15 @@ import java.util.stream.Collectors;
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
 
-    @Autowired
-    ComplaintRepository complaintRepository;
-    @Autowired
-    BuildingRepository buildingRepository;
-    @Autowired
-    UnitRepository unitRepository;
+    private final ComplaintRepository complaintRepository;
+    private final BuildingRepository buildingRepository;
+    private final UnitRepository unitRepository;
 
-    @Autowired
-    ImageRepository imageRepository;
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository, BuildingRepository buildingRepository, UnitRepository unitRepository) {
+        this.complaintRepository = complaintRepository;
+        this.buildingRepository = buildingRepository;
+        this.unitRepository = unitRepository;
+    }
 
     @Override
     @Transactional
@@ -42,9 +40,9 @@ public class ComplaintServiceImpl implements ComplaintService {
         if (buildingExists) {
             if (unitsExists) {
                 List<Object[]> habilitados = this.buildingRepository.getHabilitados(complaint.getBuildingID());
-                List<Inquilino> habilitadosConv = habilitados
+                List<Tenant> habilitadosConv = habilitados
                         .stream()
-                        .map(habilitado -> new Inquilino(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
+                        .map(habilitado -> new Tenant(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
                         .collect(Collectors.toList());
 
                 boolean esHabitanteDelEdificio = habilitadosConv.stream().filter(inquilino -> inquilino.getDocument().equals(complaint.getPersonByDocument().getDocument())).count() > 0;
@@ -65,7 +63,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public List<Complaint> getAll() {
+    public List<Complaint> findAll() {
         return this.complaintRepository.findAll();
     }
 
@@ -78,12 +76,12 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public List<Complaint> getAllByStatus(String status) {
+    public List<Complaint> findByStatus(String status) {
         return this.complaintRepository.getByStatus(status);
     }
 
     @Override
-    public List<Complaint> getComplaints(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException {
+    public List<Complaint> findByParameter(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException {
         List<Complaint> reclamos = this.complaintRepository.findAllByBuildingIDOrUnitIDOrComplaintID(buildingID, unitID, complaintID);
         if (!reclamos.isEmpty()) {
             return reclamos;
@@ -92,8 +90,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     @Override
-    public List<ComplaintsByDocumentID> getComplaintsByDocument(String document) throws NoComplaintsFoundException {
-        List<Object[]> results = this.complaintRepository.getComplaintsByTenantOrAdmin(document);
+    public List<ComplaintsByDocumentID> findByAllOrByTenant(String document) throws NoComplaintsFoundException {
+        List<Object[]> results = this.complaintRepository.getAllComplaintsOrByTenant(document);
 
         if (!results.isEmpty()) {
             List<ComplaintsByDocumentID> complaints = new ArrayList<>();

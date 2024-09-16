@@ -15,7 +15,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @Entity
-@Table(name = "people", schema = "dbo", catalog = "gestion_reclamo_consorcio")
+@Table(name = "people", schema = "dbo", catalog = "condo_complaints")
 public class Person implements UserDetails {
 
     @Id
@@ -37,12 +37,12 @@ public class Person implements UserDetails {
     private Collection<Complaint> complaintsByDocument;
 
     @OneToMany(mappedBy = "person")
-    @JsonManagedReference(value = "person-duenio")
-    private Collection<Duenio> dueniosByDocument;
+    @JsonManagedReference(value = "person-owner")
+    private Collection<Owner> ownersByDocument;
 
     @OneToMany(mappedBy = "person")
-    @JsonManagedReference(value = "person-inquilino")
-    private Collection<Inquilino> inquilinosByDocument;
+    @JsonManagedReference(value = "person-tenant")
+    private Collection<Tenant> tenantsByDocument;
 
     public Person(String document, String credential) {
         this.document = document;
@@ -56,12 +56,12 @@ public class Person implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Person persona)) return false;
-        return Objects.equals(getDocument(), persona.getDocument()) && Objects.equals(getName(), persona.getName()) && Objects.equals(getCredential(), persona.getCredential()) && Objects.equals(getRole(), persona.getRole()) && Objects.equals(getComplaintsByDocument(), persona.getComplaintsByDocument()) && Objects.equals(getDueniosByDocument(), persona.getDueniosByDocument());
+        return Objects.equals(getDocument(), persona.getDocument()) && Objects.equals(getName(), persona.getName()) && Objects.equals(getCredential(), persona.getCredential()) && Objects.equals(getRole(), persona.getRole()) && Objects.equals(getComplaintsByDocument(), persona.getComplaintsByDocument()) && Objects.equals(getOwnersByDocument(), persona.getOwnersByDocument());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDocument(), getName(), getCredential(), getRole(), getComplaintsByDocument(), getDueniosByDocument());
+        return Objects.hash(getDocument(), getName(), getCredential(), getRole(), getComplaintsByDocument(), getOwnersByDocument());
     }
 
     @Override

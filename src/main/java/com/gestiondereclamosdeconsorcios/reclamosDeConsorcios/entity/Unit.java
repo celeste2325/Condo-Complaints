@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @Entity
-@Table(name = "units", schema = "dbo", catalog = "gestion_reclamo_consorcio")
+@Table(name = "units", schema = "dbo", catalog = "condo_complaints")
 public class Unit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -35,23 +35,23 @@ public class Unit {
     @JsonBackReference(value = "building-unit")
     private Building buildingByBuildingID;
 
-    @OneToMany(mappedBy = "unitIDInquilino")
-    @JsonManagedReference(value = "unit-inquilino")
-    private Collection<Inquilino> inquilinosByUnitID;
+    @OneToMany(mappedBy = "unitIdTenant")
+    @JsonManagedReference(value = "unit-tenant")
+    private Collection<Tenant> tenantsByUnitID;
 
-    @OneToMany(mappedBy = "unitIDduenio")
-    @JsonManagedReference(value = "unit-duenio")
-    private Collection<Duenio> duniosByUnitID;
+    @OneToMany(mappedBy = "unitIDowner")
+    @JsonManagedReference(value = "unit-owner")
+    private Collection<Owner> ownersByUnitID;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Unit unit)) return false;
-        return Objects.equals(getUnitID(), unit.getUnitID()) && Objects.equals(getFloor(), unit.getFloor()) && Objects.equals(getNumber(), unit.getNumber()) && Objects.equals(getHabitado(), unit.getHabitado()) && Objects.equals(getBuildingByBuildingID(), unit.getBuildingByBuildingID()) && Objects.equals(getInquilinosByUnitID(), unit.getInquilinosByUnitID()) && Objects.equals(getDuniosByUnitID(), unit.getDuniosByUnitID());
+        return Objects.equals(getUnitID(), unit.getUnitID()) && Objects.equals(getFloor(), unit.getFloor()) && Objects.equals(getNumber(), unit.getNumber()) && Objects.equals(getHabitado(), unit.getHabitado()) && Objects.equals(getBuildingByBuildingID(), unit.getBuildingByBuildingID()) && Objects.equals(getTenantsByUnitID(), unit.getTenantsByUnitID()) && Objects.equals(getOwnersByUnitID(), unit.getOwnersByUnitID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUnitID(), getFloor(), getNumber(), getHabitado(), getBuildingByBuildingID(), getInquilinosByUnitID(), getDuniosByUnitID());
+        return Objects.hash(getUnitID(), getFloor(), getNumber(), getHabitado(), getBuildingByBuildingID(), getTenantsByUnitID(), getOwnersByUnitID());
     }
 }

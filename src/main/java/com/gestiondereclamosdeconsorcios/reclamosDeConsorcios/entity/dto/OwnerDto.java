@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DuenioCrearDto {
-    private Integer identificador;
-    private String documento;
+public class OwnerDto {
+    private Integer unitID;
+    private String document;
 }
