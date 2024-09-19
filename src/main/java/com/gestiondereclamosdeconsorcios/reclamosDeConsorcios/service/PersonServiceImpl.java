@@ -1,7 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.YaExisteUnaPersonaConMismoDniException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DuplicateDocumentException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -23,20 +23,20 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void createPerson(Person newPerson) throws YaExisteUnaPersonaConMismoDniException {
-        boolean existeLaPersona = this.personRepository.existsById(newPerson.getDocument());
-        if (!existeLaPersona) {
+    public void createPerson(Person newPerson) throws DuplicateDocumentException {
+        boolean personExists = this.personRepository.existsById(newPerson.getDocument());
+        if (!personExists) {
             this.personRepository.save(newPerson);
         } else {
-            throw new YaExisteUnaPersonaConMismoDniException("ya existe una persona con mismo documento");
+            throw new DuplicateDocumentException("A person with the same document already exists.");
         }
     }
 
     @Override
-    public Person update(Person newPersona, String documento) {
-        return this.personRepository.findById(documento).map(persona -> {
-            persona.setName(newPersona.getName());
-            return this.personRepository.save(persona);
+    public Person update(Person newPerson, String document) {
+        return this.personRepository.findById(document).map(person -> {
+            person.setName(newPerson.getName());
+            return this.personRepository.save(person);
         }).get();
     }
 
@@ -46,12 +46,12 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person findByDocument(String documentID) throws DocumentoNoEncontradoException {
+    public Person findByDocument(String documentID) throws DocumentNotFoundException {
         Optional<Person> persona = this.personRepository.findByDocument(documentID);
         if (persona.isPresent()) {
             return persona.get();
         } else {
-            throw new DocumentoNoEncontradoException("The document ID must belong to a condo owner/tenant");
+            throw new DocumentNotFoundException("The document is not found in the condo data.");
         }
     }
 

@@ -1,8 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoAsignadoPreviamenteAlAUnidadException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoSeEncontraronDueniosException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.OwnerAlreadyAssignedToUnitException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.OwnerNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Owner;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
@@ -32,70 +33,73 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public List<OwnerResponseDto> findAll() {
-        List<OwnerResponseDto> dueniosDto = new ArrayList<>();
-        ownerRepository.findAll().stream().forEach(duenio -> {
-            OwnerResponseDto duenioDto = new OwnerResponseDto(duenio);
-            dueniosDto.add(duenioDto);
+        List<OwnerResponseDto> ownersResponseDto = new ArrayList<>();
+        ownerRepository.findAll().forEach(owner -> {
+            OwnerResponseDto ownerResponseDto = new OwnerResponseDto(owner);
+            ownersResponseDto.add(ownerResponseDto);
         });
-        return dueniosDto;
+        return ownersResponseDto;
     }
 
     @Override
     @Transactional
-    public void createOwner(OwnerDto newDuenio) throws DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException {
-        //para validar si la persona a la que se quiere asignar como dueño ya existe en la base
-        Optional<Person> personaEncontrada = this.personRepository.findById(newDuenio.getDocument());
-        if (this.losDatosSonValidos(newDuenio)) {
-            if (personaEncontrada.isPresent()) {
-                this.ownerRepository.asignarDuenio(newDuenio.getUnitID(), newDuenio.getDocument());
-            } else
-                throw new DocumentoNoEncontradoException("El documento del dueño que desea asignar no corresponde a una persona registrada en el consorcio");
-        }
+    public void assignOwnerToUnit(OwnerDto ownerDto) throws DocumentNotFoundException, OwnerAlreadyAssignedToUnitException, UnitNotFoundException {
+        //document must exist in the condo
+        Optional<Person> personByID = this.personRepository.findById(ownerDto.getDocument());
+        if (personByID.isPresent()) {
+            if (this.isValidToAssign(ownerDto)) {
+                this.ownerRepository.assignOwnerToUnit(ownerDto.getUnitID(), ownerDto.getDocument());
+            }
+        } else
+            throw new DocumentNotFoundException("The document is not found in the condo data.");
     }
 
-    private boolean losDatosSonValidos(OwnerDto newDuenio) throws DocumentoAsignadoPreviamenteAlAUnidadException {
-        //para validar si existe la unidad a la cual quiere asignar el dueño.
-        Optional<Unit> unidadEncontrada = this.unitRepository.findById(newDuenio.getUnitID());
-
-        //para validar si el dueño a asignar ya fue asignado a esa misma unidad
-        boolean yaFueAsignado = this.ownerRepository.existsByDocumentAndUnitID(newDuenio.getDocument(), unidadEncontrada.get().getUnitID());
-        if (unidadEncontrada.isPresent()) {
-            if (!yaFueAsignado) {
+    private boolean isValidToAssign(OwnerDto ownerDto) throws OwnerAlreadyAssignedToUnitException, UnitNotFoundException {
+        Optional<Unit> unitByID = this.unitRepository.findById(ownerDto.getUnitID());
+        //check if the unit exist
+        if (unitByID.isPresent()) {
+            //check if the owner was assigned to this unit
+            boolean assigned = this.ownerRepository.existsByDocumentAndUnitID(ownerDto.getDocument(), unitByID.get().getUnitID());
+            if (!assigned) {
                 return true;
             } else
-                throw new DocumentoAsignadoPreviamenteAlAUnidadException("Ya el duenio fue asignado previamente a la unidad");
+                throw new OwnerAlreadyAssignedToUnitException("The owner has already been assigned to this unit.");
         }
-        return false;
-
+        throw new UnitNotFoundException("Unit not found");
     }
 
     @Override
-    public List<Owner> dueniosPorEdificio(Integer codigo) {
-        return this.ownerRepository.ownersByBuildingID(codigo);
+    public List<Owner> findByBuildingID(Integer buildingID) {
+        return this.ownerRepository.ownersByBuildingID(buildingID);
     }
 
     @Override
     @Transactional
-    public void update(String newDocumentoDuenio, Integer id, String documentoDuenioAntiguo) throws NoSeEncontraronDueniosException {
-        Owner duenio = this.ownerRepository.findByDocumentAndUnitID(documentoDuenioAntiguo, id);
-        if (duenio != null) {
-            duenio.setDocument(newDocumentoDuenio);
-            this.ownerRepository.deleteById(duenio.getId());
-            this.ownerRepository.asignarDuenio(id, duenio.getDocument());
-        } else throw new NoSeEncontraronDueniosException("No existe el dueño");
+    public void assignOwnerToUnit(String newOwnerDocument, Integer unitID, String previousOwnerDocument) throws OwnerNotFoundException, DocumentNotFoundException {
+        //person is register in the condo?
+        Optional<Person> newOwner = this.personRepository.findByDocument(newOwnerDocument);
+
+        if (newOwner.isEmpty()) {
+            throw new DocumentNotFoundException("The document is not found in the condo data.");
+        }
+        Owner owner = this.ownerRepository.findByDocumentAndUnitID(previousOwnerDocument, unitID);
+        if (owner != null) {
+            owner.setPerson(newOwner.get());
+            this.ownerRepository.save(owner);
+        } else throw new OwnerNotFoundException("Owner not found in that unit.");
     }
 
     @Override
-    public List<OwnerResponseDto> findByParameter(Integer codigoUnidad, Integer idDuenio, String documento) throws NoSeEncontraronDueniosException {
-        List<OwnerResponseDto> dueniosDto = new ArrayList<>();
-        List<Owner> duenios = this.ownerRepository.findAllByUnitIDOrIdOrDocument(codigoUnidad, idDuenio, documento);
-        if (!duenios.isEmpty()) {
-            duenios.stream().forEach(duenio -> {
-                OwnerResponseDto duenioDto = new OwnerResponseDto(duenio);
-                dueniosDto.add(duenioDto);
+    public List<OwnerResponseDto> findByParameter(Integer unitID, Integer ownerID, String document) throws OwnerNotFoundException {
+        List<OwnerResponseDto> ownersResponseDto = new ArrayList<>();
+        List<Owner> owners = this.ownerRepository.findAllByUnitIDOrIdOrDocument(unitID, ownerID, document);
+        if (!owners.isEmpty()) {
+            owners.forEach(owner -> {
+                OwnerResponseDto ownerResponseDto = new OwnerResponseDto(owner);
+                ownersResponseDto.add(ownerResponseDto);
             });
-        } else throw new NoSeEncontraronDueniosException("No se encontraron dueños");
-        return dueniosDto;
+        } else throw new OwnerNotFoundException("Owners not found.");
+        return ownersResponseDto;
     }
 
     @Override

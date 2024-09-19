@@ -1,7 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions;
 
-public class LaUnidadYaFueCreada extends Exception {
-    public LaUnidadYaFueCreada(String message) {
+public class ExistingUnitException extends Exception {
+    public ExistingUnitException(String message) {
         super(message);
     }
 }

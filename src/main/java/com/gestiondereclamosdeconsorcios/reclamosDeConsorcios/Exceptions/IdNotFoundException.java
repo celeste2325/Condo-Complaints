@@ -1,7 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions;
 
-public class existingAccount extends Exception {
-    public existingAccount(String message) {
+public class IdNotFoundException extends Exception {
+    public IdNotFoundException(String message) {
         super(message);
     }
 }

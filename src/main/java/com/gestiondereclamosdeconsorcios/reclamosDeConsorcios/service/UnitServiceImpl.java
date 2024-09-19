@@ -1,10 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.LaUnidadYaFueCreada;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ExistingUnitException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.CreationUnitDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnitRepository;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,14 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public Integer createUnit(UnidadDto unit) throws BuildingNotFoundException, LaUnidadYaFueCreada {
-        if (this.buildingRepository.existsById(unit.getCodigoEdificio())) {
-            if (!this.unitRepository.existsByFloorAndNumberAndBuildingID(unit.getPiso(), unit.getNumero(), unit.getCodigoEdificio())) {
-                return this.unitRepository.saveUnit(unit.getPiso(), unit.getNumero(), unit.getCodigoEdificio());
-            } else throw new LaUnidadYaFueCreada("La unidad que intenta crear ya existe en el edificio");
+    public Integer createUnit(CreationUnitDto unit) throws ExistingUnitException, BuildingNotFoundException {
+        if (this.buildingRepository.existsById(unit.getBuildingID())) {
+            if (!this.unitRepository.existsByFloorAndNumberAndBuildingID(unit.getFloor(), unit.getNumber(), unit.getBuildingID())) {
+                return this.unitRepository.saveUnit(unit.getFloor(), unit.getNumber(), unit.getOccupied(), unit.getBuildingID());
+            } else throw new ExistingUnitException("The unit you're trying to create already exists in the building.");
 
         } else
-            throw new BuildingNotFoundException("El código del edificio ingresado no corresponde a un edificio del consorcio");
+            throw new BuildingNotFoundException("Building not found.");
     }
 
     @Override
@@ -40,11 +40,11 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public Unit updateUnit(Unit newUnit, Integer unitID) {
-        return unitRepository.findById(unitID).map(unidad -> {
-            unidad.setFloor(newUnit.getFloor());
-            unidad.setNumber(newUnit.getNumber());
-            unidad.setHabitado(newUnit.getHabitado());
-            return unitRepository.save(unidad);
+        return unitRepository.findById(unitID).map(unit -> {
+            unit.setFloor(newUnit.getFloor());
+            unit.setNumber(newUnit.getNumber());
+            unit.setOccupied(newUnit.getOccupied());
+            return unitRepository.save(unit);
         }).get();
     }
 
@@ -58,7 +58,6 @@ public class UnitServiceImpl implements UnitService {
         Optional<Unit> unitByUnitID = this.unitRepository.findById(unitID);
         if (unitByUnitID.isPresent()) {
             return unitByUnitID.get();
-        } else throw new UnitNotFoundException("El id ingresado no corresponde a una unidad existente");
+        } else throw new UnitNotFoundException("Unit not found");
     }
-
 }

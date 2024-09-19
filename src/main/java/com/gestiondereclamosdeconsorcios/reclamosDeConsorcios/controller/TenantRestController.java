@@ -1,7 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.OwnerAlreadyAssignedToUnitException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.TenantDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.TenantResponseDto;
@@ -22,13 +23,9 @@ public class TenantRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity createTenant(@RequestBody TenantDto tenant) {
-        try {
-            this.tenantService.createTenant(tenant);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Void> assignTenantToUnit(@RequestBody TenantDto tenant) throws DocumentNotFoundException, UnitNotFoundException, OwnerAlreadyAssignedToUnitException {
+        this.tenantService.assignTenantToUnit(tenant);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/")
@@ -37,21 +34,13 @@ public class TenantRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findByID(@PathVariable Integer id) {
-        try {
-            return new ResponseEntity<>(tenantService.findByID(id), HttpStatus.OK);
-        } catch (IdInexistenteException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<TenantResponseDto> findByID(@PathVariable Integer id) throws IdNotFoundException {
+        return new ResponseEntity<>(tenantService.findByID(id), HttpStatus.OK);
     }
 
     @GetMapping("/tenants/{document}")
-    public ResponseEntity findByDocument(@PathVariable String document) {
-        try {
-            return new ResponseEntity<>(this.tenantService.findByDocument(document), HttpStatus.OK);
-        } catch (DocumentoNoEncontradoException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<List<TenantResponseDto>> findByDocument(@PathVariable String document) throws DocumentNotFoundException {
+        return new ResponseEntity<>(this.tenantService.findByDocument(document), HttpStatus.OK);
     }
 
     @DeleteMapping("/{tenantID}")
@@ -61,12 +50,8 @@ public class TenantRestController {
     }
 
     @DeleteMapping("/{unitID}/{buildingID}")
-    public ResponseEntity<String> releaseUnit(@PathVariable Integer unitID, @PathVariable Integer buildingID) throws UnitNotFoundException {
-        try {
-            this.tenantService.releaseUnit(unitID, buildingID);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> releaseUnit(@PathVariable Integer unitID, @PathVariable Integer buildingID) throws UnitNotFoundException {
+        this.tenantService.releaseUnit(unitID, buildingID);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

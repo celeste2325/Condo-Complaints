@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Building;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -39,10 +39,10 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public Building updateBuilding(Building newBuilding, Integer buildingID) {
-        return buildingRepository.findById(buildingID).map(edificio -> {
-            edificio.setAddress(newBuilding.getAddress());
-            edificio.setName(newBuilding.getName());
-            return buildingRepository.save(edificio);
+        return buildingRepository.findById(buildingID).map(building -> {
+            building.setAddress(newBuilding.getAddress());
+            building.setName(newBuilding.getName());
+            return buildingRepository.save(building);
         }).get();
     }
 
@@ -52,17 +52,12 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public List<Tenant> getHabilitados(Integer codigo) {
-        List<Object[]> habilitados = this.buildingRepository.getHabilitados(codigo);
-        return habilitados
-                .stream()
-                .map(habilitado -> new Tenant(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Building findByID(Integer buildingID) {
-        return this.buildingRepository.findByBuildingID(buildingID);
+    public Building findByID(Integer buildingID) throws BuildingNotFoundException {
+        Building building = this.buildingRepository.findByBuildingID(buildingID);
+        if (building == null) {
+            throw new BuildingNotFoundException("Building not found.");
+        }
+        return building;
     }
 
     @Override
@@ -73,7 +68,7 @@ public class BuildingServiceImpl implements BuildingService {
         //// Transforms the received data into the BuildingWithUnitsByTenant DTO.
         for (Object[] row : results) {
             if (!buildings.stream()
-                    .anyMatch(buil -> buil.getBuildingID() == (Integer) row[5])) {
+                    .anyMatch(building -> building.getBuildingID() == (Integer) row[5])) {
                 BuildingWithUnitsByTenant building = new BuildingWithUnitsByTenant(
                         (String) row[0],    // buildingName
                         (String) row[1],    // buildingAddress

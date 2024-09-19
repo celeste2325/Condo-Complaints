@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Building;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.BuildingWithUnitsByTenant;
@@ -21,12 +22,12 @@ public class BuildingController {
     }
 
     @PostMapping("/")
-    public ResponseEntity createBuilding(@RequestBody Building building) {
+    public ResponseEntity<String> createBuilding(@RequestBody Building building) {
         try {
             this.buildingService.createBuilding(building);
-            return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -37,44 +38,26 @@ public class BuildingController {
 
     @GetMapping("/")
     public List<Building> findAll() {
-        try {
-            return this.buildingService.findAll();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        return null;
+        return this.buildingService.findAll();
     }
 
     @GetMapping("/{buildingID}")
-    public Building findByID(@PathVariable Integer buildingID) {
+    public ResponseEntity<Object> findByID(@PathVariable Integer buildingID) {
         try {
-            return this.buildingService.findByID(buildingID);
-        } catch (Exception e) {
-            e.getMessage();
+            return new ResponseEntity<>(this.buildingService.findByID(buildingID), HttpStatus.OK);
+        } catch (BuildingNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-        return null;
     }
 
     @GetMapping("/tenants/{buildingID}")
-    public List<Tenant> findTenantsByBuildingID(@PathVariable Integer buildingID) {
-        try {
-            return this.buildingService.findTenantsByBuildingID(buildingID);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        return null;
+    public ResponseEntity<List<Tenant>> findTenantsByBuildingID(@PathVariable Integer buildingID) {
+        return new ResponseEntity<>(this.buildingService.findTenantsByBuildingID(buildingID), HttpStatus.OK);
     }
 
     @GetMapping("/buildings/tenant/{tenantDocumentID}")
     public ResponseEntity<List<BuildingWithUnitsByTenant>> findByTenant(@PathVariable String tenantDocumentID) {
         return new ResponseEntity<>(this.buildingService.findByTenant(tenantDocumentID), HttpStatus.OK);
-    }
-
-    @GetMapping("/habilitados/{buildingID}")
-    public List<Tenant> getHabilitadosEdificio(@PathVariable Integer buildingID) {
-        return this.buildingService.getHabilitados(buildingID);
     }
 
     @DeleteMapping("/{id}")

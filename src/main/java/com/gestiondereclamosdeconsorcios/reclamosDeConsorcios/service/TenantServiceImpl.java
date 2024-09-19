@@ -1,8 +1,8 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoAsignadoPreviamenteAlAUnidadException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdInexistenteException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IdNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.OwnerAlreadyAssignedToUnitException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -32,34 +33,34 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public List<TenantResponseDto> findAll() {
-        List<TenantResponseDto> inquilinos = new ArrayList<>();
-        tenantRepository.findAll().stream().forEach(inquilino -> {
-            TenantResponseDto inquilinoDto = new TenantResponseDto(inquilino);
-            inquilinos.add(inquilinoDto);
+        List<TenantResponseDto> tenants = new ArrayList<>();
+        tenantRepository.findAll().forEach(tenant -> {
+            TenantResponseDto tenantResponseDto = new TenantResponseDto(tenant);
+            tenants.add(tenantResponseDto);
         });
-        return inquilinos;
+        return tenants;
     }
 
     @Override
-    public TenantResponseDto findByID(Integer id) throws IdInexistenteException {
+    public TenantResponseDto findByID(Integer id) throws IdNotFoundException {
         Optional<Tenant> tenantByID = this.tenantRepository.findById(id);
         if (tenantByID.isPresent()) {
             return new TenantResponseDto(tenantByID.get());
-        } else throw new IdInexistenteException("El id ingresado no corresponde a un inquilino registrado");
+        } else throw new IdNotFoundException("ID not found");
     }
 
     @Override
-    public List<TenantResponseDto> findByDocument(String document) throws DocumentoNoEncontradoException {
-        List<TenantResponseDto> inquilinosDto = new ArrayList<>();
-        List<Tenant> inquilinos = this.tenantRepository.findByDocument(document);
-        if (!inquilinos.isEmpty()) {
-            inquilinos.stream().forEach(inquilino -> {
-                TenantResponseDto inquilinoDto = new TenantResponseDto(inquilino);
-                inquilinosDto.add(inquilinoDto);
+    public List<TenantResponseDto> findByDocument(String document) throws DocumentNotFoundException {
+        List<TenantResponseDto> tenantsResponseDto = new ArrayList<>();
+        List<Tenant> tenants = this.tenantRepository.findByDocument(document);
+        if (!tenants.isEmpty()) {
+            tenants.forEach(tenant -> {
+                TenantResponseDto tenantResponseDto = new TenantResponseDto(tenant);
+                tenantsResponseDto.add(tenantResponseDto);
             });
-        } else throw new DocumentoNoEncontradoException("El dni ingresado no corresponde a un inquilino del consorcio");
+        } else throw new DocumentNotFoundException("The document is not found in the condo data.");
 
-        return inquilinosDto;
+        return tenantsResponseDto;
     }
 
     @Override
@@ -67,41 +68,37 @@ public class TenantServiceImpl implements TenantService {
         Optional<Unit> unit = this.unitRepository.findById(unitID);
 
         if (unit.isPresent()) {
-            if (unit.get().getBuildingID() == buildingID) {
+            if (Objects.equals(unit.get().getBuildingID(), buildingID)) {
                 this.tenantRepository.deleteByUnitID(unitID);
-                unit.get().setHabitado("N");
+                unit.get().setOccupied("N");
                 this.unitRepository.save(unit.get());
-            } else throw new UnitNotFoundException("No existe una unidad en el edificio ingresado");
+            } else throw new UnitNotFoundException("unit not found in the building");
 
-        } else throw new UnitNotFoundException("Unidad inexistente");
+        } else throw new UnitNotFoundException("Unit not found");
 
     }
 
     @Transactional
     @Override
-    public void createTenant(TenantDto newTenant) throws DocumentoNoEncontradoException, DocumentoAsignadoPreviamenteAlAUnidadException, UnitNotFoundException {
-        //para validar si la persona a la que se quiere asignar como dueño ya existe en la base
-        boolean existeLaPersona = this.personRepository.existsById(newTenant.getDocument());
+    public void assignTenantToUnit(TenantDto newTenant) throws DocumentNotFoundException, OwnerAlreadyAssignedToUnitException, UnitNotFoundException {
+        //person is register in the condo?
+        boolean personExists = this.personRepository.existsById(newTenant.getDocument());
+        Optional<Unit> unit = this.unitRepository.findById(newTenant.getUnitID());
 
-        //para validar si existe la unidad a la cual quiere asignar el dueño.
-        Optional<Unit> unidad = this.unitRepository.findById(newTenant.getUnitID());
-
-        //para validar si el dueño a asignar ya fue asignado a esa misma unidad
-        boolean yaFueAsignado = this.tenantRepository.existsByDocumentAndUnitID(newTenant.getDocument(), unidad.get().getUnitID());
-
-        if (existeLaPersona) {
-            if (unidad.isPresent()) {
-                if (!yaFueAsignado) {
-                    unidad.get().setHabitado("S");
-                    this.unitRepository.save(unidad.get());
-                    this.tenantRepository.asignarDuenio(newTenant.getUnitID(), newTenant.getDocument());
-                    System.out.println(unidad.get().getHabitado());
-                } else
-                    throw new DocumentoAsignadoPreviamenteAlAUnidadException("Ya el inquilino fue asignado previamente a la unidad");
-            } else
-                throw new UnitNotFoundException("La unidad no existe");
-        } else
-            throw new DocumentoNoEncontradoException("El documento del inquilino que desea asignar no corresponde a una persona registrada en el consorcio");
+        if (!personExists) {
+            throw new DocumentNotFoundException("The document is not found in the condo data.");
+        }
+        if (unit.isEmpty()) {
+            throw new UnitNotFoundException("Unit not found");
+        }
+        // Validate if the tenant has already been assigned to the unit
+        boolean isTenantAssigned = this.tenantRepository.existsByDocumentAndUnitID(newTenant.getDocument(), unit.get().getUnitID());
+        if (isTenantAssigned) {
+            throw new OwnerAlreadyAssignedToUnitException("The tenant has already been assigned to this unit.");
+        }
+        unit.get().setOccupied("Y");
+        this.unitRepository.save(unit.get());
+        this.tenantRepository.assignTenant(newTenant.getUnitID(), newTenant.getDocument());
     }
 
     @Override
@@ -109,6 +106,4 @@ public class TenantServiceImpl implements TenantService {
         this.tenantRepository.deleteById(id);
 
     }
-
-
 }

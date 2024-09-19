@@ -12,7 +12,7 @@ public interface TenantRepository extends JpaRepository<Tenant, Integer> {
     boolean existsByDocumentAndUnitID(String document, Integer unitID);
 
     @Query(value = "SET NOCOUNT ON insert Into tenants (unitID, document) values (?1, ?2) select @@identity", nativeQuery = true)
-    void asignarDuenio(Integer unitID, String document);
+    void assignTenant(Integer unitID, String document);
 
     @Query(value = "SET NOCOUNT ON delete from tenants where unitID =?1 select @@identity", nativeQuery = true)
     void deleteByUnitID(Integer unitID);

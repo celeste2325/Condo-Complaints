@@ -25,8 +25,8 @@ public class Unit {
     @Column(name = "number")
     private String number;
     @Basic
-    @Column(name = "habitado")
-    private String habitado = "N";
+    @Column(name = "occupied")
+    private String occupied = "N";
     @Basic
     @Column(name = "buildingID", insertable = false, updatable = false)
     private Integer buildingID;
@@ -47,11 +47,11 @@ public class Unit {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Unit unit)) return false;
-        return Objects.equals(getUnitID(), unit.getUnitID()) && Objects.equals(getFloor(), unit.getFloor()) && Objects.equals(getNumber(), unit.getNumber()) && Objects.equals(getHabitado(), unit.getHabitado()) && Objects.equals(getBuildingByBuildingID(), unit.getBuildingByBuildingID()) && Objects.equals(getTenantsByUnitID(), unit.getTenantsByUnitID()) && Objects.equals(getOwnersByUnitID(), unit.getOwnersByUnitID());
+        return Objects.equals(getUnitID(), unit.getUnitID()) && Objects.equals(getFloor(), unit.getFloor()) && Objects.equals(getNumber(), unit.getNumber()) && Objects.equals(getOccupied(), unit.getOccupied()) && Objects.equals(getBuildingByBuildingID(), unit.getBuildingByBuildingID()) && Objects.equals(getTenantsByUnitID(), unit.getTenantsByUnitID()) && Objects.equals(getOwnersByUnitID(), unit.getOwnersByUnitID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUnitID(), getFloor(), getNumber(), getHabitado(), getBuildingByBuildingID(), getTenantsByUnitID(), getOwnersByUnitID());
+        return Objects.hash(getUnitID(), getFloor(), getNumber(), getOccupied(), getBuildingByBuildingID(), getTenantsByUnitID(), getOwnersByUnitID());
     }
 }

@@ -1,7 +1,10 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ExistingUnitException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Unit;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UnidadDto;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.CreationUnitDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.UnitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +23,8 @@ public class UnitController {
     }
 
     @PostMapping("/")
-    public ResponseEntity createUnit(@RequestBody UnidadDto newUnit) {
-        try {
-            return new ResponseEntity<>(unitService.createUnit(newUnit), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Integer> createUnit(@RequestBody CreationUnitDto newUnit) throws BuildingNotFoundException, ExistingUnitException {
+        return new ResponseEntity<>(unitService.createUnit(newUnit), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -35,17 +34,12 @@ public class UnitController {
 
     @GetMapping("/")
     public List<Unit> findAll() {
-        List<Unit> units = unitService.findAll();
-        return units;
+        return this.unitService.findAll();
     }
 
     @GetMapping("/{unitID}")
-    public ResponseEntity findByID(@PathVariable Integer unitID) {
-        try {
-            return new ResponseEntity<>(unitService.findByID(unitID), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Unit> findByID(@PathVariable Integer unitID) throws UnitNotFoundException {
+        return new ResponseEntity<>(unitService.findByID(unitID), HttpStatus.OK);
     }
 
     @DeleteMapping("/{unitID}")

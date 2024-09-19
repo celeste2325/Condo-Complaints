@@ -1,7 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions;
 
-public class IdInexistenteException extends Exception {
-    public IdInexistenteException(String message) {
+public class OwnerNotFoundException extends Exception {
+    public OwnerNotFoundException(String message) {
         super(message);
     }
 }

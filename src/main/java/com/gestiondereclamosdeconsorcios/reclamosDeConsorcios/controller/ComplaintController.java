@@ -1,6 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.BuildingNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.InvalidBuildingResidentException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoComplaintsFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
@@ -22,18 +25,13 @@ public class ComplaintController {
     }
 
     @PostMapping("/")
-    public ResponseEntity createComplaint(@RequestBody Complaint complaint) {
-        try {
-            return new ResponseEntity<>(this.complaintService.createComplaint(complaint), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Complaint> createComplaint(@RequestBody Complaint complaint) throws BuildingNotFoundException, UnitNotFoundException, InvalidBuildingResidentException {
+        return new ResponseEntity<>(this.complaintService.createComplaint(complaint), HttpStatus.CREATED);
     }
 
-    //TODO CHECK
     @PutMapping("/updateComplaintStatus")
-    public ResponseEntity updateComplaintStatus(@RequestBody UpdateComplaintStatusRequest updateComplaintStatusRequest) {
-        return new ResponseEntity(this.complaintService.updateComplaintStatus(updateComplaintStatusRequest), HttpStatus.OK);
+    public ResponseEntity<Complaint> updateComplaintStatus(@RequestBody UpdateComplaintStatusRequest updateComplaintStatusRequest) {
+        return new ResponseEntity<>(this.complaintService.updateComplaintStatus(updateComplaintStatusRequest), HttpStatus.OK);
     }
 
     @GetMapping("/")
@@ -47,12 +45,8 @@ public class ComplaintController {
     }
 
     @GetMapping("/complaints")
-    public ResponseEntity findByParameter(@RequestParam(name = "buildingID", defaultValue = "0") Integer buildingID, @RequestParam(name = "unitID", defaultValue = "0") Integer unitID, @RequestParam(name = "complaintID", defaultValue = "0") Integer complaintID) {
-        try {
-            return new ResponseEntity<>(this.complaintService.findByParameter(buildingID, unitID, complaintID), HttpStatus.OK);
-        } catch (NoComplaintsFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<List<Complaint>> findByParameter(@RequestParam(name = "buildingID", defaultValue = "0") Integer buildingID, @RequestParam(name = "unitID", defaultValue = "0") Integer unitID, @RequestParam(name = "complaintID", defaultValue = "0") Integer complaintID) throws NoComplaintsFoundException {
+        return new ResponseEntity<>(this.complaintService.findByParameter(buildingID, unitID, complaintID), HttpStatus.OK);
     }
 
     @GetMapping("/complaints/tenant")

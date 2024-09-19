@@ -1,9 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.CondoOwnerNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,23 +18,25 @@ import java.util.Optional;
 
 @Service
 public class UserProvider implements UserDetailsManager, UserDetailsService {
-    @Autowired
-    private PasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder bCryptPasswordEncoder;
+    private final PersonRepository personRepository;
 
-    @Autowired
-    private PersonRepository personRepository;
+    public UserProvider(PasswordEncoder bCryptPasswordEncoder, PersonRepository personRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.personRepository = personRepository;
+    }
 
     @Override
     public void createUser(UserDetails personaLogin) {
-        Optional<Person> personaEncontrada = this.personRepository.findById(personaLogin.getUsername());
-        if (personaEncontrada.isPresent()) {
-            personaEncontrada.get().setCredential(this.bCryptPasswordEncoder.encode(personaLogin.getPassword()));
-            this.personRepository.save(personaEncontrada.get());
+        Optional<Person> personByID = this.personRepository.findById(personaLogin.getUsername());
+        if (personByID.isPresent()) {
+            personByID.get().setCredential(this.bCryptPasswordEncoder.encode(personaLogin.getPassword()));
+            this.personRepository.save(personByID.get());
 
         } else try {
-            throw new CondoOwnerNotFoundException
-                    ("El número de documento no corresponde a un inquilino o dueño válido para el consorcio");
-        } catch (CondoOwnerNotFoundException e) {
+            throw new DocumentNotFoundException
+                    ("The document is not found in the condo data.");
+        } catch (DocumentNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -82,7 +84,7 @@ public class UserProvider implements UserDetailsManager, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Person> user = this.personRepository.findById(username);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
         return user.get();

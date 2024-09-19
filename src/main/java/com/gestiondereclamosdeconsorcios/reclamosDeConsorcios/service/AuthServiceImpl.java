@@ -1,12 +1,11 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service;
 
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.CondoOwnerNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ExistingAccountException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.IncorrectDocumentOrPasswordException;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.existingAccount;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.AuthDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +13,22 @@ import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    @Autowired
-    private PasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private PersonRepository personRepository;
+    private final PasswordEncoder bCryptPasswordEncoder;
+    private final PersonRepository personRepository;
+
+    public AuthServiceImpl(PasswordEncoder bCryptPasswordEncoder, PersonRepository personRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.personRepository = personRepository;
+    }
 
     @Override
-    public Person signUp(AuthDto signUpData) throws CondoOwnerNotFoundException, existingAccount {
+    public Person signUp(AuthDto signUpData) throws CondoOwnerNotFoundException, ExistingAccountException {
         Optional<Person> personByID = this.personRepository.findById(signUpData.getDocument());
         if (personByID.isPresent()) {
             if (personByID.get().getPassword() == null) {
                 personByID.get().setCredential(this.bCryptPasswordEncoder.encode(signUpData.getPassword()));
                 return this.personRepository.save(personByID.get());
-            } else throw new existingAccount("Account with this document exists.");
+            } else throw new ExistingAccountException("Account with this document exists.");
         } else throw new CondoOwnerNotFoundException
                 ("The document ID doesn't belong to a owner/tenant of the condo");
     }

@@ -1,6 +1,7 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentoNoEncontradoException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DuplicateDocumentException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Person;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.PersonService;
 import org.springframework.http.HttpStatus;
@@ -19,38 +20,30 @@ public class PersonRestController {
         this.personService = personService;
     }
 
+    @PostMapping("/")
+    public ResponseEntity<Void> createPerson(@RequestBody Person person) throws DuplicateDocumentException {
+        this.personService.createPerson(person);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{document}")
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person, @PathVariable String document) {
+        return new ResponseEntity<>(this.personService.update(person, document), HttpStatus.OK);
+    }
+
     @GetMapping("/")
     public List<Person> findAll() {
         return this.personService.findAll();
     }
 
     @GetMapping("/{document}")
-    public ResponseEntity findByDocument(@PathVariable String document) {
-        try {
-            return new ResponseEntity<>(this.personService.findByDocument(document), HttpStatus.OK);
-        } catch (DocumentoNoEncontradoException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/")
-    public ResponseEntity createPerson(@RequestBody Person person) {
-        try {
-            this.personService.createPerson(person);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Person> findByDocument(@PathVariable String document) throws DocumentNotFoundException {
+        return new ResponseEntity<>(this.personService.findByDocument(document), HttpStatus.OK);
     }
 
     @DeleteMapping("/{document}")
     public ResponseEntity<Void> deleteByID(@PathVariable String document) {
         this.personService.deleteByID(document);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PutMapping("/{document}")
-    public ResponseEntity<Person> updatePerson(@RequestBody Person person, @PathVariable String document) {
-        return new ResponseEntity<>(this.personService.update(person, document), HttpStatus.OK);
     }
 }

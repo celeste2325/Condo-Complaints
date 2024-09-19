@@ -1,5 +1,6 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.ComplaintNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ImageDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.ImageService;
 import org.springframework.core.io.Resource;
@@ -21,13 +22,9 @@ public class ImageController {
     }
 
     @PostMapping("/")
-    public ResponseEntity addImageToComplaint(@RequestBody ImageDto image) {
-        try {
-            this.imageService.addImage(image);
-            return new ResponseEntity(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> addImageToComplaint(@RequestBody ImageDto image) throws ComplaintNotFoundException {
+        this.imageService.addImage(image);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{complaintID}")

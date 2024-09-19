@@ -5,18 +5,17 @@ import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.Invalid
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoComplaintsFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Complaint;
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.Tenant;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.ComplaintsByDocumentID;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.UpdateComplaintStatusRequest;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.BuildingRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.ComplaintRepository;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.TenantRepository;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.repository.UnitRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
@@ -24,40 +23,36 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final BuildingRepository buildingRepository;
     private final UnitRepository unitRepository;
+    private final TenantRepository tenantRepository;
 
-    public ComplaintServiceImpl(ComplaintRepository complaintRepository, BuildingRepository buildingRepository, UnitRepository unitRepository) {
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository, BuildingRepository buildingRepository, UnitRepository unitRepository, TenantRepository tenantRepository) {
         this.complaintRepository = complaintRepository;
         this.buildingRepository = buildingRepository;
         this.unitRepository = unitRepository;
+        this.tenantRepository = tenantRepository;
     }
 
     @Override
     @Transactional
     public Complaint createComplaint(Complaint complaint) throws BuildingNotFoundException, UnitNotFoundException, InvalidBuildingResidentException {
         boolean buildingExists = this.buildingRepository.existsById(complaint.getBuildingID());
-        boolean unitsExists = this.unitRepository.existsByUnitIDAndBuildingID(complaint.getUnitID(), complaint.getBuildingID());
         Complaint complaintCreated;
         if (buildingExists) {
-            if (unitsExists) {
-                List<Object[]> habilitados = this.buildingRepository.getHabilitados(complaint.getBuildingID());
-                List<Tenant> habilitadosConv = habilitados
-                        .stream()
-                        .map(habilitado -> new Tenant(((Integer) habilitado[0]), (Integer) habilitado[1], (String) habilitado[2]))
-                        .collect(Collectors.toList());
-
-                boolean esHabitanteDelEdificio = habilitadosConv.stream().filter(inquilino -> inquilino.getDocument().equals(complaint.getPersonByDocument().getDocument())).count() > 0;
-                if (esHabitanteDelEdificio) {
+            boolean unitExists = this.unitRepository.existsByUnitIDAndBuildingID(complaint.getUnitID(), complaint.getBuildingID());
+            if (unitExists) {
+                boolean isTenantOfTheUnit = this.tenantRepository.existsByDocumentAndUnitID(complaint.getPersonByDocument().getDocument(), complaint.getUnitID());
+                if (isTenantOfTheUnit) {
                     complaintCreated = this.complaintRepository.save(complaint);
                     complaint.getImagesByComplaintID().forEach(
-                            imagen -> {
-                                imagen.setPath("assets//" + complaintCreated.getComplaintID() + "//" + imagen.getPath());
-                                imagen.setExtension(imagen.getExtension());
+                            image -> {
+                                image.setPath("assets//" + complaintCreated.getComplaintID() + "//" + image.getPath());
+                                image.setExtension(image.getExtension());
                             }
                     );
 
                 } else
-                    throw new InvalidBuildingResidentException("The entered document does not belong to an owner/tenant of the building.");
-            } else throw new UnitNotFoundException("Unit not found");
+                    throw new InvalidBuildingResidentException("invalid resident of the unit");
+            } else throw new UnitNotFoundException("Unit not found in the building");
         } else throw new BuildingNotFoundException("Building not found.");
         return complaintCreated;
     }
@@ -82,10 +77,10 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public List<Complaint> findByParameter(Integer buildingID, Integer unitID, Integer complaintID) throws NoComplaintsFoundException {
-        List<Complaint> reclamos = this.complaintRepository.findAllByBuildingIDOrUnitIDOrComplaintID(buildingID, unitID, complaintID);
-        if (!reclamos.isEmpty()) {
-            return reclamos;
-        } else throw new NoComplaintsFoundException("You have not submitted any complaints yet.");
+        List<Complaint> complaints = this.complaintRepository.findAllByBuildingIDOrUnitIDOrComplaintID(buildingID, unitID, complaintID);
+        if (!complaints.isEmpty()) {
+            return complaints;
+        } else throw new NoComplaintsFoundException("No complaints were found.");
 
     }
 
@@ -96,7 +91,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         if (!results.isEmpty()) {
             List<ComplaintsByDocumentID> complaints = new ArrayList<>();
 
-            //// Transforms the received data into the BuildingWithUnitsByTenant DTO.
+            // Transforms the received data into the BuildingWithUnitsByTenant DTO.
             for (Object[] row : results) {
                 ComplaintsByDocumentID complaintsByTenant = new ComplaintsByDocumentID(
                         (Integer) row[0],     // complaintID

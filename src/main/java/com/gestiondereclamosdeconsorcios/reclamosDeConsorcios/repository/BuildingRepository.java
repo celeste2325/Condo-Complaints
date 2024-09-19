@@ -13,11 +13,6 @@ public interface BuildingRepository extends JpaRepository<Building, Integer> {
     @Query(value = "Select i from Tenant i inner join Unit u on u.unitID = i.unitID where u.buildingID =?1")
     List<Tenant> getBuildingTenants(Integer buildingID);
 
-    @Query(value = "select uni.*, u.buildingID from (select * from tenants union all  SELECT * from owners) as uni inner join units u on uni.unitID = u.unitID inner join buildings b on b.buildingID = u.buildingID\n" +
-            "where b.buildingID=?1", nativeQuery = true)
-    List<Object[]> getHabilitados(Integer buildingID);
-
-
     @Query(value = "select b.name as buildingName, b.address as buildingAddress, u.unitID as unitID, floor as floor, number as unitNumber, b.buildingID as buildingID from buildings b " +
             "inner join dbo.units u on b.buildingID = u.buildingID " +
             "inner join dbo.tenants t on u.unitID = t.unitID " +

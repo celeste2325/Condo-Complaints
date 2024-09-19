@@ -1,6 +1,9 @@
 package com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.controller;
 
-import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.NoSeEncontraronDueniosException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.DocumentNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.OwnerAlreadyAssignedToUnitException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.OwnerNotFoundException;
+import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.Exceptions.UnitNotFoundException;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.OwnerDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.entity.dto.OwnerResponseDto;
 import com.gestiondereclamosdeconsorcios.reclamosDeConsorcios.service.OwnerService;
@@ -21,13 +24,9 @@ public class OwnerRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity createOwner(@RequestBody OwnerDto ownerDto) {
-        try {
-            this.ownerService.createOwner(ownerDto);
-            return new ResponseEntity(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> assignOwnerToUnit(@RequestBody OwnerDto ownerDto) throws DocumentNotFoundException, UnitNotFoundException, OwnerAlreadyAssignedToUnitException {
+        this.ownerService.assignOwnerToUnit(ownerDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/")
@@ -36,29 +35,29 @@ public class OwnerRestController {
     }
 
     @GetMapping("/owners/{buildingID}")
-    public ResponseEntity findByBuildingID(@PathVariable Integer buildingID) {
+    public ResponseEntity<Object> findByBuildingID(@PathVariable Integer buildingID) {
         try {
-            return new ResponseEntity<>(ownerService.dueniosPorEdificio(buildingID), HttpStatus.OK);
+            return new ResponseEntity<>(ownerService.findByBuildingID(buildingID), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/owners")
-    public ResponseEntity findByParameter(@RequestParam(name = "unitID", defaultValue = "0") Integer unitID,
-                                          @RequestParam(name = "id", defaultValue = "0") Integer id,
-                                          @RequestParam(name = "document", defaultValue = "0") String document) {
-        try {
-            return new ResponseEntity<>(this.ownerService.findByParameter(unitID, id, document), HttpStatus.OK);
-        } catch (NoSeEncontraronDueniosException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping("/{documentoNvo}/{id}/{documentoDuenioAntiguo}")
-    public ResponseEntity transferirDuenio(@PathVariable String documentoNvo, @PathVariable Integer id, @PathVariable String documentoDuenioAntiguo) throws NoSeEncontraronDueniosException {
+    @GetMapping("/owners")
+    public ResponseEntity<Object> findByParameter(@RequestParam(name = "unitID", defaultValue = "0") Integer unitID,
+                                                  @RequestParam(name = "id", defaultValue = "0") Integer id,
+                                                  @RequestParam(name = "document", defaultValue = "0") String document) {
         try {
-            ownerService.update(documentoNvo, id, documentoDuenioAntiguo);
+            return new ResponseEntity<>(this.ownerService.findByParameter(unitID, id, document), HttpStatus.OK);
+        } catch (OwnerNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{newOwnerDocument}/{unitID}/{previousOwnerDocument}")
+    public ResponseEntity<String> assignOwnerToUnit(@PathVariable String newOwnerDocument, @PathVariable Integer unitID, @PathVariable String previousOwnerDocument) throws OwnerNotFoundException {
+        try {
+            ownerService.assignOwnerToUnit(newOwnerDocument, unitID, previousOwnerDocument);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
