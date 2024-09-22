@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 public class ImageServiceImpl implements ImageService {
-    private static final String UPLOAD_DIR = "D:\\programacion2024\\Condo-Complaints\\src\\main\\java\\com\\gestiondereclamosdeconsorcios\\reclamosDeConsorcios\\";
+    private static final String UPLOAD_DIR = "src/main/java/com/gestiondereclamosdeconsorcios/reclamosDeConsorcios/";
     private final ImageRepository imageRepository;
     private final ComplaintRepository complaintRepository;
 

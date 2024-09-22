@@ -1,3 +1,7 @@
+CREATE
+DATABASE condo_complaints;
+GO
+
 use
 condo_complaints
 CREATE TABLE buildings

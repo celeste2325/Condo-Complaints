@@ -16,11 +16,51 @@ choco install openjdk17
 choco install docker-desktop
 ```
 
-## Configuring the Environment
+### Lombok Configuration
+
+This project uses **Lombok** for reducing boilerplate code (e.g., getters, setters, constructors, etc.). Lombok is
+already configured in the `pom.xml` with the following dependency:
+
+```xml
+
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.20</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+Lombok Installation in Your IDE
+To ensure Lombok works correctly in your local development environment, you need to install and configure Lombok for
+your IDE. Follow the steps below:
+
+<u>For IntelliJ IDEA:</u>
+
+1) Go to File -> Settings -> Plugins.
+2) Search for Lombok and click Install.
+3) After installation, enable annotation processing:
+   Navigate to File -> Settings -> Build, Execution, Deployment -> Compiler -> Annotation Processors, and check Enable
+   annotation processing.
+
+<u>For Eclipse:</u>
+
+1) Download the Lombok JAR from the official site.
+2) Run the JAR by executing
+
+```
+java -jar lombok.jar
+```
+
+3) The Lombok installer will open; select your Eclipse IDE installation folder and proceed with the installation.
+4) Restart Eclipse and ensure annotation processing is enabled by going to:
+   Preferences -> Maven -> Annotation Processing -> Enable.
+
+### Configuring the Environment
 
 Start the database with Docker:
 
-```
+```bash
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=ROOTfancyPass25!" -p 1433:1433 --name condo_complaints -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
@@ -30,7 +70,7 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=ROOTfancyPass25!" -p 1433:14
 
 The initialization script is located at
 
-```bash
+```
 src/main/resources/initial_data.sql
 ```
 
@@ -41,6 +81,14 @@ src/main/resources/initial_data.sql
 3. Open the `initial_data.sql` script from the specified location.
 4. Review the script contents to ensure compatibility with your existing database schema.
 5. Execute the script to populate the database with the necessary initial data.
+
+## Usage
+
+```bash
+mvn install
+mvn spring-boot:run 
+
+```
 
 ## Postman Collection Import
 
