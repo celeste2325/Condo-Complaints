@@ -22,7 +22,7 @@ public class Complaint {
 
     @Basic
     @Column(name = "status")
-    private String status = "nuevo";
+    private String status = "new";
     @Basic
     @Column(name = "location")
     private String location;
